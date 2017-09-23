@@ -1,0 +1,29 @@
+<div class="pull-right">
+	<a href="#!/uploadImage" class="btn btn-default" ng-show="hasRole('ROLE_ADMIN')" title="Upload"><span class="fa fa-upload"></span></a>
+</div>
+<div class="page-header">
+	<h3>Main</h3>
+</div>
+<div ng-repeat="post in posts">
+	<!-- <hr />
+	<h4>{{post.description}}</h4>
+	<p>{{post.category}}</p> -->
+	
+	<a href="#!/edit/{{post.id}}">
+		<img class="post" ng-src="{{post.link}}">
+	</a>
+</div>
+
+
+<!-- <div ng-repeat="blogPost in blogPosts">
+	<hr />
+	<div class="pull-right">
+		<a href="" ng-click="deletePost(blogPost)" class="btn btn-xs btn-default" ng-show="hasRole('ROLE_ADMIN')"
+		   title="delete"><span class="fa fa-trash-o"></span></a>
+		<a href="#!/edit/{{blogPost.id}}" class="btn btn-xs btn-default" ng-show="hasRole('ROLE_ADMIN')"
+		   title="edit"><span class="fa fa-pencil"></span></a>
+	</div>
+	<h4>{{blogPost.date | date}}</h4>
+	<p>{{blogPost.content}}</p>
+</div>
+<hr /> -->

@@ -1,0 +1,84 @@
+<div class="page-header">
+	<h3>Details</h3>
+</div>
+
+<form class="form-horizontal">
+
+	<div class="col-md-8">
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-8">
+					<img class="post detais" ng-src="{{post.link}}">
+				</div>
+			</div>
+		</form>
+	</div>
+	
+	<div class="col-md-4">
+		<form class="form-horizontal">
+			<div class="form-group">
+				<label for="imageCategories" class="col-sm-4 label label-primary">User upload : {{fullName}}</label>
+			</div>
+			<div class="form-group">
+				<label for="imageCategories" class="col-sm-4 label label-primary">Datetime {{post.date}}</label>
+			</div>
+			<div class="form-group">
+				<label for="imageCategories" class="col-sm-4 label label-primary">Description {{post.description}}</label>
+			</div>
+			
+			<hr/>
+			<div class="form-group">
+				<span class="badge">{{post.likeNumber}}</span>  <span class="badge">{{post.dislikeNumber}}</span>
+			</div>
+			<hr/>
+			
+			List Comments:<br/>
+			<div ng-repeat="comment in comments">
+				<div class="form-group">
+					<label class="col-sm-4 label label-success">{{comment.username}}: {{comment.content}}</label>
+				</div>
+			</div>
+			
+			<hr/>
+			
+			<div class="form-group">
+				<textarea id="comment" ng-model="description" rows="3" class="col-sm-4 form-control"></textarea>
+			</div>
+			
+			
+			
+			
+			
+			<!-- <div class="form-group">
+				<label for="description" class="col-sm-4 control-label">Description:</label>
+				<div class="col-sm-8">
+					<textarea id="description" ng-model="description" rows="5" class="form-control"></textarea>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-sm-8 col-sm-offset-4">
+					<input type="submit" value="Upload" class="btn btn-primary" ng-click="uploadImage()"/>
+				</div>
+			</div> -->
+			
+		</form>
+	</div>
+
+
+
+
+
+	<!-- <div class="form-group">
+		<label class="control-label col-sm-2" for="content">Content</label>
+		<div class="col-sm-10">
+			<textarea ng-model="blogPost.content" id="content" class="form-control"
+					  rows="10">{{blogPost.content}}</textarea>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-10 col-sm-offset-2">
+			<button type="submit" class="btn btn-primary" ng-click="save()"><span class="fa fa-check"></span> Save</button>
+		</div>
+	</div> -->
+</form>
