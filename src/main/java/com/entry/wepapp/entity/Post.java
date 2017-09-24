@@ -24,7 +24,7 @@ public class Post implements Entity
     private Long dislikeNumber;
     
     @Column
-    private Long userId;
+    private String username;
     
     @Column
 	private String category;
@@ -40,11 +40,11 @@ public class Post implements Entity
         /* Reflection instantiation */
     }
 
-    public Post(String description, Long likeNumber, Long dislikeNumber, Long userId, String category, String link) {
+    public Post(String description, Long likeNumber, Long dislikeNumber, String username, String category, String link) {
 		this.description = description;
 		this.likeNumber = likeNumber;
 		this.dislikeNumber = dislikeNumber;
-		this.userId = userId;
+		this.username = username;
 		this.category = category;
 		this.link = link;
 		this.date = new Date();
@@ -80,12 +80,12 @@ public class Post implements Entity
 		this.dislikeNumber = dislikeNumber;
 	}
 
-	public Long getUserId() {
-		return userId;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getCategory() {

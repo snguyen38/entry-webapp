@@ -1,3 +1,43 @@
+app.directive('enterEvent', function ($http, CommentService) {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    var fd = new FormData();
+                    fd.append('postId', scope.post.id);
+                    fd.append('username', attrs.enterEvent);
+                    fd.append('content', scope.comment);
+                    
+                    $http.post("/entry-webapp/rest/comments/postComment", fd, {
+                        transformRequest: angular.identity,
+                        headers: {'Content-Type': undefined}
+                    }).then(function(response){
+                    	if (response.data) {
+                    		scope.comment = '';
+                    		
+                    		//refresh comment list
+                    		var fd = new FormData();
+                            fd.append('postId', scope.post.id);
+                            
+                            $http.post("/entry-webapp/rest/comments/getCommentsByPost", fd, {
+                                transformRequest: angular.identity,
+                                headers: {'Content-Type': undefined}
+                            }).then(function(response){
+                            	if (response.data) {
+                            		scope.comments  = response.data;
+                            	}
+                            });
+                            
+                    	}
+                    });
+                });
+                
+                event.preventDefault();
+            }
+        });
+    };
+});
+
 app.service('PostBridgeService', function() {
 	  var nickName 
 	  imageLink,

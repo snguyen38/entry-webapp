@@ -132,6 +132,7 @@
         <security:intercept-url pattern="/rest/user/upload" access="permitAll"/>
         
         <security:intercept-url method="GET" pattern="/rest/posts/**" access="hasRole('ADMIN')"/>
+        <security:intercept-url method="GET" pattern="/rest/comments/**" access="hasRole('ADMIN')"/>
         
         <security:intercept-url method="GET" pattern="/rest/blogposts/**" access="hasRole('ADMIN')"/>
         <security:intercept-url method="PUT" pattern="/rest/blogposts/**" access="hasRole('ADMIN')"/>

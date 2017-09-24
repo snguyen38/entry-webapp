@@ -1,18 +1,77 @@
+<div class="pull-right">
+	<a href="#!/uploadImage" class="btn btn-default" ng-show="hasRole('ROLE_ADMIN')" title="Upload"><span class="fa fa-upload"></span></a>
+</div>
 <div class="page-header">
 	<h3>User Repository</h3>
 </div>
 
-<form class="form-horizontal">
-	<div class="form-group">
-		<label class="control-label col-sm-2" for="content">Content</label>
-		<div class="col-sm-10">
-			<textarea ng-model="blogPost.content" id="content" class="form-control"
-					  rows="10">{{blogPost.content}}</textarea>
+<div ng-repeat="post in posts">
+<!-- 	<div class="list-img"> -->
+		<div class="row list-img">
+			<div class="col-md-3">
+				<img class="image-repo" ng-src="{{post.post.link}}">
+			</div>
+			
+			<div class="col-md-2">
+				<h4 class="row">{{post.post.date | date}}</h4>
+				<p class="row">{{post.post.description}}</p>
+			</div>
+			
+			<!-- comment zone-->
+			<div class="col-md-7 comments-form">
+				<div class="row comment">
+					<p class="row comment">{{post.post.category}}</p>
+					<p class="row comment">{{post.post.date | date}}</p>
+					<p class="row comment">{{post.post.description}}</p>
+				</div>
+				<hr />
+				
+				<div class="row comment">
+					<p class="row comment">{{post.post.category}}</p>
+					<p class="row comment">{{post.post.date | date}}</p>
+					<p class="row comment">{{post.post.description}}</p>
+				</div>
+				<hr />
+				
+				<div class="row comment">
+					<p class="row comment">{{post.post.category}}</p>
+					<p class="row comment">{{post.post.date | date}}</p>
+					<p class="row comment">{{post.post.description}}</p>
+				</div>
+				<hr />
+				
+				<div class="row comment">
+					<p class="row comment">{{post.post.category}}</p>
+					<p class="row comment">{{post.post.date | date}}</p>
+					<p class="row comment">{{post.post.description}}</p>
+				</div>
+				<hr />
+			</div>
+			<!-- end comment zone-->
 		</div>
+		<hr />
+		
+<!-- 	</div> -->
+</div>
+
+
+
+
+<!-- <div ng-repeat="comments in posts">
+		<p>{{comments[0].username}}</p>
+		<p>{{comments.date | date}}</p>
+		<p>{{comments.content}}</p>
 	</div>
-	<div class="form-group">
-		<div class="col-sm-10 col-sm-offset-2">
-			<button type="submit" class="btn btn-primary" ng-click="save()"><span class="fa fa-check"></span> Save</button>
-		</div>
+
+<div ng-repeat="blogPost in blogPosts">
+	<hr />
+	<div class="pull-right">
+		<a href="" ng-click="deletePost(blogPost)" class="btn btn-xs btn-default" ng-show="hasRole('ROLE_ADMIN')"
+		   title="delete"><span class="fa fa-trash-o"></span></a>
+		<a href="#!/edit/{{blogPost.id}}" class="btn btn-xs btn-default" ng-show="hasRole('ROLE_ADMIN')"
+		   title="edit"><span class="fa fa-pencil"></span></a>
 	</div>
-</form>
+	<h4>{{blogPost.date | date}}</h4>
+	<p>{{blogPost.content}}</p>
+</div>
+<hr /> -->

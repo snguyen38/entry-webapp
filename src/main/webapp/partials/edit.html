@@ -8,7 +8,14 @@
 		<form class="form-horizontal">
 			<div class="form-group">
 				<div class="col-sm-8">
-					<img class="post detais" ng-src="{{post.link}}">
+					<div class="image">
+					    <img class="detais" ng-src="{{post.link}}"  ng-mouseover="imageMouseOver()" ng-mouseleave="imageMouseLeave()">
+					    <div class="text" ng-show="showLike">
+					       Text of variable length
+					    </div>
+					</div>
+				
+<!-- 					<img class="post detais" ng-src="{{post.link}}" ng-mouseover="imageHoverOn()"><span>abc</span></img> -->
 				</div>
 			</div>
 		</form>
@@ -17,10 +24,10 @@
 	<div class="col-md-4">
 		<form class="form-horizontal">
 			<div class="form-group">
-				<label for="imageCategories" class="col-sm-4 label label-primary">User upload : {{fullName}}</label>
+				<label for="imageCategories" class="col-sm-4 label label-primary">User upload : {{username}}</label>
 			</div>
 			<div class="form-group">
-				<label for="imageCategories" class="col-sm-4 label label-primary">Datetime {{post.date}}</label>
+				<label for="imageCategories" class="col-sm-4 label label-primary">Datetime {{post.date | date}}</label>
 			</div>
 			<div class="form-group">
 				<label for="imageCategories" class="col-sm-4 label label-primary">Description {{post.description}}</label>
@@ -28,8 +35,14 @@
 			
 			<hr/>
 			<div class="form-group">
-				<span class="badge">{{post.likeNumber}}</span>  <span class="badge">{{post.dislikeNumber}}</span>
+				<i class="fa fa-thumbs-o-up liked" ng-click="updateLikeAndDislike(post.likeNumber + 1, post.dislikeNumber)" aria-hidden="true"></i> <span class="liked">{{post.likeNumber}}</span>
+				<i class="fa fa-thumbs-o-down disliked" ng-click="updateLikeAndDislike(post.likeNumber, post.dislikeNumber + 1)" aria-hidden="true"></i> <span class="disliked">{{post.dislikeNumber}}</span>
 			</div>
+			
+				<div class="form-group">
+				<textarea id="comment" enter-event="{{user.name}}" ng-model="comment" rows="2" placeholder="Write a comment" class="col-sm-4 form-control"></textarea>
+			</div>
+			
 			<hr/>
 			
 			List Comments:<br/>
@@ -41,44 +54,5 @@
 			
 			<hr/>
 			
-			<div class="form-group">
-				<textarea id="comment" ng-model="description" rows="3" class="col-sm-4 form-control"></textarea>
-			</div>
 			
-			
-			
-			
-			
-			<!-- <div class="form-group">
-				<label for="description" class="col-sm-4 control-label">Description:</label>
-				<div class="col-sm-8">
-					<textarea id="description" ng-model="description" rows="5" class="form-control"></textarea>
-				</div>
-			</div>
-			
-			<div class="form-group">
-				<div class="col-sm-8 col-sm-offset-4">
-					<input type="submit" value="Upload" class="btn btn-primary" ng-click="uploadImage()"/>
-				</div>
-			</div> -->
-			
-		</form>
-	</div>
-
-
-
-
-
-	<!-- <div class="form-group">
-		<label class="control-label col-sm-2" for="content">Content</label>
-		<div class="col-sm-10">
-			<textarea ng-model="blogPost.content" id="content" class="form-control"
-					  rows="10">{{blogPost.content}}</textarea>
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-sm-10 col-sm-offset-2">
-			<button type="submit" class="btn btn-primary" ng-click="save()"><span class="fa fa-check"></span> Save</button>
-		</div>
-	</div> -->
 </form>

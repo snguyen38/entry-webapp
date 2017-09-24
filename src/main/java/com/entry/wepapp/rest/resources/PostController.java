@@ -3,13 +3,13 @@ package com.entry.wepapp.rest.resources;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -27,6 +27,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import com.entry.wepapp.dao.blogpost.CommentDao;
@@ -60,7 +61,7 @@ public class PostController
 	@Produces(MediaType.APPLICATION_JSON)
 	public boolean registerUser(@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail, 
-			@FormDataParam("userId") Long userId,
+			@FormDataParam("username") String username,
 			@FormDataParam("category") String category,
 			@FormDataParam("description") String description) {
 		try {
@@ -72,7 +73,7 @@ public class PostController
 			    FileUtils.copyInputStreamToFile(uploadedInputStream, targetFile);
 			}
 			
-			Post post = new Post(description, 0L, 0L, userId, category, filePath);
+			Post post = new Post(description, 0L, 0L, username, category, filePath);
 			return !ObjectUtils.isEmpty(this.postDao.save(post));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
@@ -90,10 +91,10 @@ public class PostController
         return allEntries;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public Map read(@PathParam("id") Long id)
     {
     	Map res = new HashMap();
@@ -103,29 +104,57 @@ public class PostController
         if (post == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
+        res.put("post", post);
         
         List<Comment> comments = this.commentDao.findByPost(id);
-        
-        res.put("post", post);
         res.put("comments", comments);
         
-        User user = this.userService.findUserById(post.getUserId());
-        res.put("fullName", user.getFirstName() + " " + user.getLastName());
+        User user = this.userService.findUserById(post.getId());
+        if (!ObjectUtils.isEmpty(user)) {
+        	res.put("username", user.getNickName());
+        }
 
         return res;
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Post create(Post Post)
-    {
-        this.LOGGER.info("create(): " + Post);
-
-        return this.postDao.save(Post);
+	@Path("/getPostByUser")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public List<Map> getPostByUser(@FormDataParam("userId") long userId) {
+    	List<Map> response = new ArrayList<>();
+        List<Post> posts = this.postDao.findPostByUser(this.userService.findUserById(userId).getNickName());
+        if (!CollectionUtils.isEmpty(posts)) {
+            for (Post post:posts) {
+            	Map map = new HashMap();
+            	map.put("post", post);
+                List<Comment> comments = this.commentDao.findByPost(post.getId());
+                map.put("comments", comments);
+                
+                response.add(map);
+            }
+        }
+        
+        return response;
     }
-
+    
     @POST
+	@Path("/updateLikeAndDislike")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean registerUser(@FormDataParam("postId") long postId,
+			@FormDataParam("likeNumber") long likeNumber,
+			@FormDataParam("dislikeNumber") long dislikeNumber) {
+		try {
+			return this.postDao.updateLikeAndDislikeNumber(postId, likeNumber, dislikeNumber);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			return false;
+		}
+	}
+
+    /*@POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("{id}")
@@ -144,6 +173,6 @@ public class PostController
         this.LOGGER.info("delete(id)");
 
         this.postDao.delete(id);
-    }
+    }*/
 
 }

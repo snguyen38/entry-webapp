@@ -27,8 +27,9 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'app.services'])
             	controller: UserDetailsController
             });
             
-            $routeProvider.when('/userRepository', {
+            $routeProvider.when('/userRepository/:id', {
             	templateUrl: 'partials/userRepository.html',
+            	controller: UserRepositoryController
             });
             
             $routeProvider.otherwise({
@@ -148,9 +149,19 @@ function MainController($rootScope, $scope, BlogPostService, PostService) {
             $scope.blogPosts = BlogPostService.query();
         });
     };
+    
+    $scope.imageMouseOver = function (event) {
+		var likeEle = angular.element( event.target.nextElementSibling );
+		likeEle.removeClass('hidden');
+	};
+	
+	$scope.imageMouseLeave = function () {
+		var likeEle = angular.element( event.target.nextElementSibling );
+		likeEle.addClass('hidden');
+	};
 }
 
-function EditController($scope, $routeParams, $location, BlogPostService, PostService) {
+function EditController($rootScope, $scope, $routeParams, $location, $http, BlogPostService, PostService) {
 
     /*$scope.blogPost = BlogPostService.get({id: $routeParams.id});
 
@@ -160,12 +171,37 @@ function EditController($scope, $routeParams, $location, BlogPostService, PostSe
         });
     };*/
 	
+	$scope.imageMouseOver = function () {
+		$scope.showLike = true;
+	};
+	
+	$scope.imageMouseLeave = function () {
+		$scope.showLike = false;
+	};
+	
 	PostService.get({id: $routeParams.id}).$promise.then(function (result) {
 		$scope.post = result.post;
-		$scope.fullName = result.fullName;
+		$scope.username = result.post.username;
 		$scope.comments = result.comments;
 	});
 	
+	$scope.updateLikeAndDislike = function (likeNumber, dislikeNumber) {
+		var fd = new FormData();
+        fd.append('postId', $scope.post.id);
+        fd.append('likeNumber', likeNumber);
+        fd.append('dislikeNumber', dislikeNumber);
+        
+        $http.post("/entry-webapp/rest/posts/updateLikeAndDislike", fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        }).then(function(response){
+        	if (response.data) {
+        		$scope.post.likeNumber = likeNumber;
+        		$scope.post.dislikeNumber = dislikeNumber;
+        	}
+        });
+        
+	};
 	
 }
 
@@ -173,6 +209,7 @@ function UploadImageController($scope, $rootScope, $location, $http, BlogPostSer
 	$scope.uploadImage = function () {
 		var fd = new FormData();
         fd.append('file', $scope.image);
+        fd.append('username', $rootScope.user.name);
         fd.append('category', $scope.imageCategories);
         fd.append('description', $scope.description);
         
@@ -324,6 +361,25 @@ function UserDetailsController($scope, $routeParams, $rootScope, $location, $htt
 	};
 }
 
+function UserRepositoryController($scope, $routeParams, $rootScope, $location, $http, $cookieStore, UserService, UserBridgeService) {
+//	$scope.posts = function () {
+		var fd = new FormData();
+		
+		fd.append('userId', $routeParams.id);
+		
+		$http.post("/entry-webapp/rest/posts/getPostByUser", fd, {
+			transformRequest: angular.identity,
+			headers: {'Content-Type': undefined}
+		})
+		.then(function(response){
+			var res = response.data;
+			if (res) {
+				$scope.posts = res;
+			}
+		});
+//	};
+}
+
 var services = angular.module('app.services', ['ngResource']);
 
 services.factory('BlogPostService', function ($resource) {
@@ -334,4 +390,9 @@ services.factory('BlogPostService', function ($resource) {
 services.factory('PostService', function ($resource) {
 
     return $resource('rest/posts/:id', {id: '@id'});
+});
+
+services.factory('CommentService', function ($resource) {
+
+    return $resource('rest/comments/:id', {id: '@id'});
 });

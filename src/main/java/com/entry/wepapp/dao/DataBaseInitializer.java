@@ -70,13 +70,13 @@ public class DataBaseInitializer
         
         User userTemp = this.userDao.findAll().get(0);
         
-        Post post1 = new Post("description 1", 0L, 0l, userTemp.getId(), category1.getCategoryName(), "images/stock/stock1.jpg");
-        Post post2 = new Post("description 2", 0L, 0l, userTemp.getId(), category1.getCategoryName(), "images/stock/stock2.jpg");
-        Post post3 = new Post("description 3", 0L, 0l, userTemp.getId(), category1.getCategoryName(), "images/stock/stock3.png");
-        Post post4 = new Post("description 4", 0L, 0l, userTemp.getId(), category1.getCategoryName(), "images/stock/stock4.jpg");
-        Post post5 = new Post("description 5", 0L, 0l, userTemp.getId(), category1.getCategoryName(), "images/stock/stock5.jpg");
-        Post post6 = new Post("description 6", 0L, 0l, userTemp.getId(), category1.getCategoryName(), "images/stock/stock6.jpg");
-        Post post7 = new Post("description 7", 0L, 0l, userTemp.getId(), category1.getCategoryName(), "images/stock/stock7.jpg");
+        Post post1 = new Post("description 1", 10L, 2l, userTemp.getUsername(), category1.getCategoryName(), "images/stock/stock1.jpg");
+        Post post2 = new Post("description 2", 15L, 4l, userTemp.getUsername(), category1.getCategoryName(), "images/stock/stock2.jpg");
+        Post post3 = new Post("description 3", 43L, 1l, userTemp.getUsername(), category1.getCategoryName(), "images/stock/stock3.png");
+        Post post4 = new Post("description 4", 77L, 4l, userTemp.getUsername(), category1.getCategoryName(), "images/stock/stock4.jpg");
+        Post post5 = new Post("description 5", 3L, 9l, userTemp.getUsername(), category1.getCategoryName(), "images/stock/stock5.jpg");
+        Post post6 = new Post("description 6", 60L, 5l, userTemp.getUsername(), category1.getCategoryName(), "images/stock/stock6.jpg");
+        Post post7 = new Post("description 7", 21L, 3l, userTemp.getUsername(), category1.getCategoryName(), "images/stock/stock7.jpg");
         this.postDao.save(post1);
         this.postDao.save(post2);
         this.postDao.save(post3);

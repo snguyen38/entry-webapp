@@ -10,7 +10,15 @@
 	<p>{{post.category}}</p> -->
 	
 	<a href="#!/edit/{{post.id}}">
-		<img class="post" ng-src="{{post.link}}">
+<!-- 		<img class="post" ng-src="{{post.link}}"> -->
+		<div class="image" ng-mouseover="imageMouseOver($event)" ng-mouseleave="imageMouseLeave()">
+			<img class="post" ng-src="{{post.link}}"  >
+			    <div class="text hidden">
+			       	<i class="fa fa-thumbs-o-up liked main" aria-hidden="true"></i> <span class="liked main">{{post.likeNumber}}</span>
+					<i class="fa fa-thumbs-o-down disliked main" aria-hidden="true"></i> <span class="disliked main">{{post.dislikeNumber}}</span>
+			    </div>
+		    </img
+	    </div>
 	</a>
 </div>
 
