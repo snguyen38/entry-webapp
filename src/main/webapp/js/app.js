@@ -249,9 +249,7 @@ function LoginController($scope, $rootScope, $location, $cookieStore, $http, Use
     		UserBridgeService.setNickName(authenticationResult.user.nickName);
     		
             UserService.get(function (user) {
-//            	$rootScope.userId = authenticationResult.user.id;
                 $rootScope.user = user;
-//                $rootScope.avatar = user.avatar;
                 $location.path("/");
             });
         });
@@ -279,7 +277,7 @@ function RegisterController($scope, $rootScope, $location, $http, $cookieStore, 
         fd.append('password', $scope.password);
         fd.append('email', $scope.email);
         fd.append('phone', $scope.phone);
-        fd.append('country', $scope.country.countryName);
+        fd.append('country', $scope.country);
         fd.append('nickName', $scope.nickName);
         
         $http.post("/entry-webapp/rest/user/register", fd, {
@@ -304,9 +302,7 @@ function RegisterController($scope, $rootScope, $location, $http, $cookieStore, 
                     $rootScope.accessToken = accessToken;
                     
                     UserService.get(function (user) {
-//                    	$rootScope.userId = authenticationResult.user.id;
                         $rootScope.user = user;
-//                        $rootScope.avatar = user.avatar;
                         $location.path("/");
                     });
                     
@@ -317,12 +313,43 @@ function RegisterController($scope, $rootScope, $location, $http, $cookieStore, 
 }
 
 function UserDetailsController($scope, $routeParams, $rootScope, $location, $http, $cookieStore, UserService, UserBridgeService) {
-	$scope.firstName = UserBridgeService.getFirstName();
+	var fd = new FormData();
+	$http.post("/entry-webapp/rest/countries/getCountries", fd, {
+		transformRequest: angular.identity,
+		headers: {'Content-Type': 'application/json', 'X-Access-Token': $rootScope.accessToken}
+	})
+	.then(function(response) {
+		var res = response.data;
+		if (res) {
+			$scope.countries = res;
+		}
+	});
+	
+	fd = new FormData();
+	fd.append('id', $routeParams.id);
+	
+	$http.post("/entry-webapp/rest/user/getUserById", fd, {
+		transformRequest: angular.identity,
+		headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
+	})
+	.then(function(response) {
+		var res = response.data;
+		if (res) {
+			$scope.firstName = res.firstName;
+			$scope.lastName = res.lastName;
+			$scope.email = res.email;
+			$scope.phone = res.phone;
+			$scope.country = res.country;
+			$scope.nickName = res.nickName;
+		}
+	});
+	
+	/*$scope.firstName = UserBridgeService.getFirstName();
 	$scope.lastName = UserBridgeService.getLastName();
 	$scope.email = UserBridgeService.getEmail();
 	$scope.phone = UserBridgeService.getPhone();
 	$scope.country = UserBridgeService.getCountry();
-	$scope.nickName = UserBridgeService.getNickName();
+	$scope.nickName = UserBridgeService.getNickName();*/
 	
 	
 	$scope.updateUser = function () {

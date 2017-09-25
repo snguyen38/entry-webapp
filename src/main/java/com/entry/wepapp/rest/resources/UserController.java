@@ -80,6 +80,15 @@ public class UserController
         String avatarDir = AvatarUtils.getValidAvatarDirectory(context.getRealPath(""), user.getAvatar());
         return new UserTransfer(user.getId(), userDetails.getUsername(), avatarDir, this.createRoleMap(userDetails));
     }
+    
+    @POST
+	@Path("/getUserById")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+    public User getUserById(@FormDataParam("id") Long id)
+    {
+        return this.userService.findUserById(id);
+    }
 
     /**
      * Authenticates a user and creates an access token.
@@ -102,7 +111,6 @@ public class UserController
         if (!(principal instanceof User)) {
             throw new WebApplicationException(Response.Status.UNAUTHORIZED);
         }
-//        AvatarUtils.getValidAvatarDirectory(context.getRealPath(""), (User) principal);
         return this.userService.createAccessToken((User) principal);
     }
     
@@ -124,22 +132,11 @@ public class UserController
 		String filePath = this.userService.findUserByNickName(username).getAvatar();
 		File file = new File(fileContext + filePath);
 	    
-		/*Blob blob = this.userService.findUserByNickName(username).getAvatar();
-		if (!ObjectUtils.isEmpty(blob)) {
-			int blobLength = (int) blob.length(); 
-			profileImg = blob.getBytes(1, blobLength);
-		}*/
 		if (!file.isDirectory() && file.exists()) {
 			return filePath;
 		} else {
-			/*InputStream inputStream = this.servletContext.getResourceAsStream("/images/if_icon-person_211874.png");
-			if (!ObjectUtils.isEmpty(inputStream)) {
-				profileImg = IOUtils.toByteArray(inputStream);
-			}*/
-			
 			return "images/if_icon-person.png";
 		}
-//		return Base64Utils.encodeToString(profileImg);
 	}
     
 	@POST
