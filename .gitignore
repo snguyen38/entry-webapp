@@ -22,7 +22,7 @@
 hs_err_pid*
 /target/
 
-# ignore for j2ee project
+# Ignore for J2EE project
 *.classpath
 *.project
 *.settings
