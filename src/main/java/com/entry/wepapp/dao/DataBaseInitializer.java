@@ -63,10 +63,12 @@ public class DataBaseInitializer
         Category category2 = new Category("Building");
         Category category3 = new Category("Landscape");
         Category category4 = new Category("Nature");
+        Category category5 = new Category("Animal");
         this.categoryDao.save(category1);
         this.categoryDao.save(category2);
         this.categoryDao.save(category3);
         this.categoryDao.save(category4);
+        this.categoryDao.save(category5);
         
         User userTemp = this.userDao.findAll().get(0);
         
@@ -74,9 +76,9 @@ public class DataBaseInitializer
         Post post2 = new Post("description 2", 15L, 4l, userTemp.getUsername(), category1.getCategoryName(), "images/stock/stock2.jpg");
         Post post3 = new Post("description 3", 43L, 1l, userTemp.getUsername(), category1.getCategoryName(), "images/stock/stock3.png");
         Post post4 = new Post("description 4", 77L, 4l, userTemp.getUsername(), category1.getCategoryName(), "images/stock/stock4.jpg");
-        Post post5 = new Post("description 5", 3L, 9l, userTemp.getUsername(), category1.getCategoryName(), "images/stock/stock5.jpg");
-        Post post6 = new Post("description 6", 60L, 5l, userTemp.getUsername(), category1.getCategoryName(), "images/stock/stock6.jpg");
-        Post post7 = new Post("description 7", 21L, 3l, userTemp.getUsername(), category1.getCategoryName(), "images/stock/stock7.jpg");
+        Post post5 = new Post("description 5", 3L, 9l, userTemp.getUsername(), category4.getCategoryName(), "images/stock/stock5.jpg");
+        Post post6 = new Post("description 6", 60L, 5l, userTemp.getUsername(), category4.getCategoryName(), "images/stock/stock6.jpg");
+        Post post7 = new Post("description 7", 21L, 3l, userTemp.getUsername(), category5.getCategoryName(), "images/stock/stock7.jpg");
         this.postDao.save(post1);
         this.postDao.save(post2);
         this.postDao.save(post3);
@@ -90,14 +92,16 @@ public class DataBaseInitializer
         
         Post postTemp = this.postDao.findAll().get(0);
         Post postTemp2 = this.postDao.findAll().get(1);
-        Comment comment1 = new Comment(userUser.getNickName(), postTemp.getId(), "content1");
-        Comment comment2 = new Comment(userUser.getNickName(), postTemp.getId(), "content2");
-        Comment comment3 = new Comment(userUser.getNickName(), postTemp.getId(), "content3");
-        Comment comment4 = new Comment(userUser.getNickName(), postTemp2.getId(), "content41");
+        Comment comment1 = new Comment(userUser.getNickName(), postTemp.getId(), "comment 1");
+        Comment comment2 = new Comment(userUser.getNickName(), postTemp.getId(), "comment 2");
+        Comment comment3 = new Comment(userUser.getNickName(), postTemp.getId(), "comment 3");
+        Comment comment4 = new Comment(userUser.getNickName(), postTemp2.getId(), "comment 1");
+        Comment comment5 = new Comment(userUser.getNickName(), postTemp2.getId(), "comment 2");
         this.commentDao.save(comment1);
         this.commentDao.save(comment2);
         this.commentDao.save(comment3);
         this.commentDao.save(comment4);
+        this.commentDao.save(comment5);
         
         System.out.println(this.commentDao.findByPost(postTemp.getId()).get(0).getContent());
         System.out.println(this.commentDao.findByPost(postTemp.getId()).size());

@@ -1,16 +1,60 @@
-<div class="pull-right">
-	<a href="#!/uploadImage" class="btn btn-default" ng-show="hasRole('ROLE_ADMIN')" title="Upload"><span class="fa fa-upload"></span></a>
+<div class="row main">
+	<div class="form-group">
+		<label for="imageCategories" class="col-sm-1 control-label">Categories:</label>
+		<div class="col-sm-3">
+			<select  id="imageCategories" ng-model="imageCategories"  class="form-control">
+				<option value="">All</option>
+				<option value="People">People</option>
+				<option value="Building">Building</option>
+				<option value="Landscape">Landscape</option>
+				<option value="Nature">Nature</option>
+				<option value="Animal">Animal</option>
+			</select>
+		</div>
+		
+		<label for="orderBy" class="col-sm-1 control-label">Order by:</label>
+		<div class="col-sm-2">
+			<select  id="orderBy" ng-model="orderBy"  class="form-control">
+				<option value="">None</option>
+				<option value="category">Category</option>
+				<option value="date">Date</option>
+			</select>
+		</div>
+		<div class="col-sm-2">
+			<select id="sort" ng-model="sort" ng-disabled="orderBy == undefined || orderBy == '' " class="form-control">
+				<option value="true">None</option>
+				<option value="">ASC</option>
+				<option value="true">DESC</option>
+			</select>
+		</div>
+		
+	</div>
 </div>
-<div class="page-header">
-	<h3>Main</h3>
+
+<div class="row main">
+	<div class="form-group">
+		<label for="username" class="col-sm-1 control-label">Username:</label>
+		<div class="col-sm-3">
+			<input id="username" ng-model="username" type="text" placeholder="Enter a user name" class="form-control" />
+		</div>
+		
+		<div class="col-sm-4">
+			<input id="limitTo" type="range" ng-model="limitTo" min="0" max="30" value="1" step="1">
+		</div>
+		<label for="limitTo" class="col-sm-2">Limit to: {{limitTo}}</label>
+
+		<div class="pull-right">
+			<a href="#!/uploadImage" class="btn btn-primary" ng-show="hasRole('ROLE_ADMIN')" title="Upload">
+				<span class="fa fa-upload"></span>
+			</a>
+		</div>
+	</div>
 </div>
-<div ng-repeat="post in posts">
-	<!-- <hr />
-	<h4>{{post.description}}</h4>
-	<p>{{post.category}}</p> -->
-	
+
+<hr/>
+
+<div ng-repeat="post in posts  | filter :{category:imageCategories, username:username} | orderBy:orderBy:sort | limitTo: limitTo">
 	<a href="#!/edit/{{post.id}}">
-<!-- 		<img class="post" ng-src="{{post.link}}"> -->
 		<div class="image" ng-mouseover="imageMouseOver($event)" ng-mouseleave="imageMouseLeave()">
 			<img class="post" ng-src="{{post.link}}"  >
 			    <div class="text hidden">
@@ -23,15 +67,3 @@
 </div>
 
 
-<!-- <div ng-repeat="blogPost in blogPosts">
-	<hr />
-	<div class="pull-right">
-		<a href="" ng-click="deletePost(blogPost)" class="btn btn-xs btn-default" ng-show="hasRole('ROLE_ADMIN')"
-		   title="delete"><span class="fa fa-trash-o"></span></a>
-		<a href="#!/edit/{{blogPost.id}}" class="btn btn-xs btn-default" ng-show="hasRole('ROLE_ADMIN')"
-		   title="edit"><span class="fa fa-pencil"></span></a>
-	</div>
-	<h4>{{blogPost.date | date}}</h4>
-	<p>{{blogPost.content}}</p>
-</div>
-<hr /> -->

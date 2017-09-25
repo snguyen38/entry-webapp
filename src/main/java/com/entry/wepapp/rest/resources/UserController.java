@@ -44,7 +44,7 @@ import com.entry.wepapp.service.UserService;
 import com.entry.wepapp.transfer.UserTransfer;
 @Component
 @Path("/user")
-public class UserResource
+public class UserController
 {
 	Logger LOGGER = LogManager.getRootLogger();
 	

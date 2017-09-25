@@ -87,6 +87,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'app.services'])
     /* Reset error when a new view is loaded */
     $rootScope.$on('$viewContentLoaded', function () {
         delete $rootScope.error;
+        delete $rootScope.info;
     });
 
     $rootScope.hasRole = function (role) {
@@ -206,7 +207,22 @@ function EditController($rootScope, $scope, $routeParams, $location, $http, Blog
 }
 
 function UploadImageController($scope, $rootScope, $location, $http, BlogPostService) {
+    var fd = new FormData();
+	$http.post("/entry-webapp/rest/posts/getCategories", fd, {
+		transformRequest: angular.identity,
+		headers: {'Content-Type': 'application/json'}
+	})
+	.then(function(response) {
+		var res = response.data;
+		if (res) {
+			$scope.categories = res;
+		}
+	});
+
 	$scope.uploadImage = function () {
+        delete $rootScope.error;
+        delete $rootScope.info;
+
 		var fd = new FormData();
         fd.append('file', $scope.image);
         fd.append('username', $rootScope.user.name);
@@ -221,7 +237,9 @@ function UploadImageController($scope, $rootScope, $location, $http, BlogPostSer
         	$scope.status = response.data;
         	if (response.data) {
         		$rootScope.info = "Image upload successfully";
-        	}
+        	} else {
+                $rootScope.error = "Image upload failed";
+            }
         	
         });
 	};
@@ -255,14 +273,6 @@ function LoginController($scope, $rootScope, $location, $cookieStore, $http, Use
                 $rootScope.avatar = user.avatar;
                 $location.path("/");
             });
-            
-            /*$http({ method: "GET",
-		    	    url: "/entry-webapp/rest/user/getAvatar",
-		    	    params: {username: $scope.username}
-            	}).then(function(response) {
-			   		$rootScope.avatar = response.data;
-			  	}
-			);*/
         });
     };
 }
@@ -362,22 +372,68 @@ function UserDetailsController($scope, $routeParams, $rootScope, $location, $htt
 }
 
 function UserRepositoryController($scope, $routeParams, $rootScope, $location, $http, $cookieStore, UserService, UserBridgeService) {
-//	$scope.posts = function () {
-		var fd = new FormData();
-		
-		fd.append('userId', $routeParams.id);
-		
-		$http.post("/entry-webapp/rest/posts/getPostByUser", fd, {
-			transformRequest: angular.identity,
-			headers: {'Content-Type': undefined}
-		})
-		.then(function(response){
-			var res = response.data;
-			if (res) {
-				$scope.posts = res;
-			}
-		});
-//	};
+	var fd = new FormData();
+	
+	fd.append('userId', $routeParams.id);
+	
+	$http.post("/entry-webapp/rest/posts/getPostByUser", fd, {
+		transformRequest: angular.identity,
+		headers: {'Content-Type': undefined}
+	})
+	.then(function(response) {
+		var res = response.data;
+		if (res) {
+			$scope.posts = res;
+		}
+	});
+	
+	$scope.deletePosts = function () {
+        $scope.postSelectedArray = [];
+        $scope.postSelectedIndex = [];
+        var removed = 0;
+        angular.forEach($scope.posts, function(post) {
+            if (!!post.post.selected) $scope.postSelectedArray.push(post.post.id);
+        })
+          
+        var fd = new FormData();
+        fd.append('postIds', JSON.stringify($scope.postSelectedArray));
+        
+        $http.post("/entry-webapp/rest/posts/deletePosts", fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        }).then(function(response){
+            if (response.data) {
+                angular.forEach($scope.posts, function(post) {
+                    angular.forEach($scope.postSelectedArray, function(p) {
+                        if (post.post.id == p) {
+                            var index = $scope.posts.indexOf(post);
+                            $scope.postSelectedIndex.push(index);
+                            /*$scope.posts.splice(index, 1);*/
+                        }
+                    })
+
+                    /*if (veryfyCheckedPost(post.post.id, $scope.postSelectedArray)) {
+                        var index = $scope.posts.indexOf(post);
+                        $scope.posts.splice(index, 1);
+                    }*/
+                })
+
+                angular.forEach($scope.postSelectedIndex, function(index) {
+                    $scope.posts.splice(index - removed, 1);
+                    removed = removed + 1;
+                })
+            }
+        });  
+    };
+    
+    function veryfyCheckedPost (id, list) {
+        angular.forEach(list, function(p) {
+            if (id == p) {
+                return true;
+            }
+        })
+        return false;
+    };
 }
 
 var services = angular.module('app.services', ['ngResource']);

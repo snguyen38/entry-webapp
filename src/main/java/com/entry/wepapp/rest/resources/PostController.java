@@ -24,18 +24,22 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
+import com.entry.wepapp.dao.blogpost.CategoryDao;
 import com.entry.wepapp.dao.blogpost.CommentDao;
 import com.entry.wepapp.dao.blogpost.PostDao;
+import com.entry.wepapp.entity.Category;
 import com.entry.wepapp.entity.Comment;
 import com.entry.wepapp.entity.Post;
 import com.entry.wepapp.entity.User;
 import com.entry.wepapp.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 @Path("/posts")
@@ -50,6 +54,9 @@ public class PostController
     private CommentDao commentDao;
     
     @Autowired
+    private CategoryDao categoryDao;
+    
+    @Autowired
     private UserService userService;
     
     @Context
@@ -59,7 +66,7 @@ public class PostController
 	@Path("/uploadImage")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public boolean registerUser(@FormDataParam("file") InputStream uploadedInputStream,
+	public boolean registerUser(@FormDataParam("file") InputStream uploadedInputStream, FormDataMultiPart multipart,
 			@FormDataParam("file") FormDataContentDisposition fileDetail, 
 			@FormDataParam("username") String username,
 			@FormDataParam("category") String category,
@@ -71,6 +78,10 @@ public class PostController
 				filePath = filePath + "\\" + fileDetail.getFileName();
 				File targetFile = new File(fileContext + filePath);
 			    FileUtils.copyInputStreamToFile(uploadedInputStream, targetFile);
+			    if (targetFile.length() > 5242880) {
+			    	targetFile.delete();
+			    	return false;
+			    }
 			}
 			
 			Post post = new Post(description, 0L, 0L, username, category, filePath);
@@ -153,7 +164,35 @@ public class PostController
 			return false;
 		}
 	}
+    
+    
+	@POST
+	@Path("/deletePosts")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	@SuppressWarnings("unchecked")
+	public boolean deletePosts(@FormDataParam("postIds") String postIds) {
+		try {
+			ObjectMapper ob = new ObjectMapper();
+			List<Integer> ids = ob.readValue(postIds, List.class);
+			for (long id:ids) {
+				this.postDao.delete(id);
+			}
+			
+			return true;
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			return false;
+		}
+	}
 
+	@POST
+	@Path("/getCategories")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Category> getCategories() {
+        return this.categoryDao.findAll();
+    }
     /*@POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

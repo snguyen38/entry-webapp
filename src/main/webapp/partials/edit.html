@@ -10,12 +10,7 @@
 				<div class="col-sm-8">
 					<div class="image">
 					    <img class="detais" ng-src="{{post.link}}"  ng-mouseover="imageMouseOver()" ng-mouseleave="imageMouseLeave()">
-					    <div class="text" ng-show="showLike">
-					       Text of variable length
-					    </div>
 					</div>
-				
-<!-- 					<img class="post detais" ng-src="{{post.link}}" ng-mouseover="imageHoverOn()"><span>abc</span></img> -->
 				</div>
 			</div>
 		</form>
@@ -24,13 +19,13 @@
 	<div class="col-md-4">
 		<form class="form-horizontal">
 			<div class="form-group">
-				<label for="imageCategories" class="col-sm-4 label label-primary">User upload : {{username}}</label>
+				<b class="row col-md-12">User upload: {{username}}</b>
 			</div>
 			<div class="form-group">
-				<label for="imageCategories" class="col-sm-4 label label-primary">Datetime {{post.date | date}}</label>
+				<p class="row col-md-12">{{post.date | date}}</p>
 			</div>
 			<div class="form-group">
-				<label for="imageCategories" class="col-sm-4 label label-primary">Description {{post.description}}</label>
+				<p class="row col-md-12">{{post.description}}</p>
 			</div>
 			
 			<hr/>
@@ -45,14 +40,28 @@
 			
 			<hr/>
 			
-			List Comments:<br/>
+			<!-- List Comments:<br/>
 			<div ng-repeat="comment in comments">
 				<div class="form-group">
 					<label class="col-sm-4 label label-success">{{comment.username}}: {{comment.content}}</label>
 				</div>
+			</div> -->
+			
+			<!-- comment zone-->
+			<div>
+				<div ng-repeat="comment in comments">
+					<div class="row comment">
+						<div class="col-sm-4">
+							<b class="row comment">{{comment.username}}</b>
+							<p class="row comment">{{comment.date | date}}</p>
+						</div>
+						
+						<div class="col-sm-8">
+							<p class="row comment">{{comment.content}}</p>
+						</div>
+					</div>
+					<hr />
+				</div>
 			</div>
-			
-			<hr/>
-			
-			
+			<!-- end comment zone-->
 </form>

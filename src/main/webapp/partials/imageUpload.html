@@ -16,12 +16,15 @@
 			<div class="form-group">
 				<label for="imageCategories" class="col-sm-4 control-label">Categories:</label>
 				<div class="col-sm-8">
-					<select  id="imageCategories" ng-model="imageCategories"  class="form-control">
-						<option value="A">A</option>
-						<option value="B">B</option>
-						<option value="C">C</option>
-						<option value="D">D</option>
-					</select>
+					<!-- <select  id="imageCategories" ng-model="imageCategories"  class="form-control">
+						<option value="People">People</option>
+						<option value="Building">Building</option>
+						<option value="Landscape">Landscape</option>
+						<option value="Nature">Nature</option>
+						<option value="Animal">Animal</option>
+					</select> -->
+					
+					<select id="imageCategories" ng-model="imageCategories"  class="form-control" ng-options="category.categoryName for category in categories">
 				</div>
 			</div>
 			
