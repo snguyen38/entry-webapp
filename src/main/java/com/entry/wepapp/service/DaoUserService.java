@@ -78,4 +78,9 @@ public class DaoUserService implements UserService
 	public User findUserById(Long id) {
 		return this.userDao.findById(id);
 	}
+
+	@Override
+	public User findUserByEmail(String email) {
+		return this.userDao.findByEmail(email);
+	}
 }

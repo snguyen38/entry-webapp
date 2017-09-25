@@ -72,4 +72,25 @@ public class JpaUserDao extends JpaDao<User, Long> implements UserDao
 
         return users.iterator().next();
 	}
+	
+	@Override
+    @Transactional(readOnly = true)
+    public User findByEmail(String email)
+    {
+        final CriteriaBuilder builder = this.getEntityManager().getCriteriaBuilder();
+        final CriteriaQuery<User> criteriaQuery = builder.createQuery(this.entityClass);
+
+        Root<User> root = criteriaQuery.from(this.entityClass);
+        Path<String> namePath = root.get("email");
+        criteriaQuery.where(builder.equal(namePath, email));
+
+        TypedQuery<User> typedQuery = this.getEntityManager().createQuery(criteriaQuery);
+        List<User> users = typedQuery.getResultList();
+
+        if (users.isEmpty()) {
+            return null;
+        }
+
+        return users.iterator().next();
+    }
 }

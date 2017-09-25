@@ -32,6 +32,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -143,7 +144,7 @@ public class UserController
 	@Path("/register")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public boolean registerUser(@FormDataParam("file") InputStream uploadedInputStream,
+	public Map<String, String> registerUser(@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail, 
 			@FormDataParam("firstName") String firstName,
 			@FormDataParam("lastName") String lastName,
@@ -152,7 +153,17 @@ public class UserController
 			@FormDataParam("phone") String phone,
 			@FormDataParam("country") String country,
 			@FormDataParam("nickName") String nickName) {
+		Map<String, String> res = new HashMap<>();
 		try {
+			User userTemp4Email = this.userService.findUserByEmail(email);
+			if (!ObjectUtils.isEmpty(userTemp4Email)) {
+				res.put("status", "false"); 
+				res.put("msg", "Email is existed"); 
+				return res;
+			}
+			
+			this.userService.findUserByNickName(nickName);
+			
 			String fileContext = context.getRealPath("");   
 			String filePath = "images-storage\\" + nickName;
 			if (!ObjectUtils.isEmpty(fileDetail.getFileName())) {
@@ -165,11 +176,21 @@ public class UserController
 	        		email, phone, country, nickName, filePath);
 	        user.addRole(Role.ADMIN);
 	        System.out.println("real path: " + filePath);
-			return !ObjectUtils.isEmpty(this.userService.saveUser(user));
+			if (!ObjectUtils.isEmpty(this.userService.saveUser(user))) {
+				res.put("status", "true"); 
+				res.put("msg", "User registered successfully"); 
+			}
+				
+			return res;
+		} catch (UsernameNotFoundException e) {
+			res.put("status", "false"); 
+			res.put("msg", "Nick name is existed");
+			return res;
+		
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-			return false;
-		}
+		LOGGER.error(e.getMessage(), e);
+		return res;
+	}
 	}
 	
 	
