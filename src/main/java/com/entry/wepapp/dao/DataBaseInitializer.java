@@ -1,17 +1,15 @@
 package com.entry.wepapp.dao;
 
-import java.util.Date;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.entry.wepapp.dao.blogpost.BlogPostDao;
-import com.entry.wepapp.dao.blogpost.CategoryDao;
-import com.entry.wepapp.dao.blogpost.CommentDao;
-import com.entry.wepapp.dao.blogpost.PostDao;
+import com.entry.wepapp.dao.post.CategoryDao;
+import com.entry.wepapp.dao.post.CommentDao;
+import com.entry.wepapp.dao.post.CountryDao;
+import com.entry.wepapp.dao.post.PostDao;
 import com.entry.wepapp.dao.user.UserDao;
-import com.entry.wepapp.entity.BlogPost;
 import com.entry.wepapp.entity.Category;
 import com.entry.wepapp.entity.Comment;
+import com.entry.wepapp.entity.Country;
 import com.entry.wepapp.entity.Post;
 import com.entry.wepapp.entity.Role;
 import com.entry.wepapp.entity.User;
@@ -24,8 +22,6 @@ public class DataBaseInitializer
 {
 	private PasswordEncoder passwordEncoder;
 	
-    private BlogPostDao blogPostDao;
-    
     private CategoryDao categoryDao;
     
     private PostDao postDao;
@@ -34,28 +30,46 @@ public class DataBaseInitializer
     
     private CommentDao commentDao;
     
+    private CountryDao countryDao;
+    
 
     protected DataBaseInitializer()
     {
         /* Default constructor for reflection instantiation */
     }
 
-    public DataBaseInitializer(PasswordEncoder passwordEncoder, UserDao userDao, BlogPostDao blogPostDao, 
-    		CategoryDao categoryDao, PostDao postDao, CommentDao commentDao)
+    public DataBaseInitializer(PasswordEncoder passwordEncoder, UserDao userDao,
+    		CategoryDao categoryDao, PostDao postDao, CommentDao commentDao, CountryDao countryDao)
     {
     	this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
-        this.blogPostDao = blogPostDao;
         this.categoryDao = categoryDao;
         this.postDao = postDao;
         this.commentDao = commentDao;
-        
+        this.countryDao = countryDao;
     }
 
     public void initDataBase()
     {
+    	Country country1 = new Country("Vietnam");
+    	Country country2 = new Country("US");
+    	Country country3 = new Country("UK");
+    	Country country4 = new Country("Singapore");
+    	Country country5 = new Country("Laos");
+    	Country country6 = new Country("Campodia");
+    	Country country7 = new Country("Thailand");
+    	Country country8 = new Country("Indonesia");
+        this.countryDao.save(country1);
+        this.countryDao.save(country2);
+        this.countryDao.save(country3);
+        this.countryDao.save(country4);
+        this.countryDao.save(country5);
+        this.countryDao.save(country6);
+        this.countryDao.save(country7);
+        this.countryDao.save(country8);
+    	
         User userUser = new User("admin", "admin", this.passwordEncoder.encode("admin"),
-        		"admin@admin.com", "123456789", "Vietnam", "admin", "");
+        		"admin@admin.com", "123456789", country1.getCountryName(), "admin", "");
         userUser.addRole(Role.ADMIN);
         this.userDao.save(userUser);
 
@@ -106,13 +120,13 @@ public class DataBaseInitializer
         System.out.println(this.commentDao.findByPost(postTemp.getId()).get(0).getContent());
         System.out.println(this.commentDao.findByPost(postTemp.getId()).size());
 
-        long timestamp = System.currentTimeMillis() - (1000 * 60 * 60 * 24);
+       /* long timestamp = System.currentTimeMillis() - (1000 * 60 * 60 * 24);
         for (int i = 0; i < 10; i++) {
             BlogPost blogPost = new BlogPost();
             blogPost.setContent("This is example content " + i);
             blogPost.setDate(new Date(timestamp));
             this.blogPostDao.save(blogPost);
             timestamp += 1000 * 60 * 60;
-        }
+        }*/
     }
 }

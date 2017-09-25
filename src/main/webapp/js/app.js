@@ -140,17 +140,9 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'app.services'])
     };
 }]);
 
-function MainController($rootScope, $scope, BlogPostService, PostService) {
-
-    $scope.blogPosts = BlogPostService.query();
+function MainController($rootScope, $scope, PostService) {
     $scope.posts = PostService.query();
 
-    $scope.deletePost = function (blogPost) {
-        blogPost.$remove(function () {
-            $scope.blogPosts = BlogPostService.query();
-        });
-    };
-    
     $scope.imageMouseOver = function (event) {
 		var likeEle = angular.element( event.target.nextElementSibling );
 		likeEle.removeClass('hidden');
@@ -162,16 +154,7 @@ function MainController($rootScope, $scope, BlogPostService, PostService) {
 	};
 }
 
-function EditController($rootScope, $scope, $routeParams, $location, $http, BlogPostService, PostService) {
-
-    /*$scope.blogPost = BlogPostService.get({id: $routeParams.id});
-
-    $scope.save = function () {
-        $scope.blogPost.$save(function () {
-            $location.path('/');
-        });
-    };*/
-	
+function EditController($rootScope, $scope, $routeParams, $location, $http, PostService) {
 	$scope.imageMouseOver = function () {
 		$scope.showLike = true;
 	};
@@ -194,23 +177,21 @@ function EditController($rootScope, $scope, $routeParams, $location, $http, Blog
         
         $http.post("/entry-webapp/rest/posts/updateLikeAndDislike", fd, {
             transformRequest: angular.identity,
-            headers: {'Content-Type': undefined}
+            headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
         }).then(function(response){
         	if (response.data) {
         		$scope.post.likeNumber = likeNumber;
         		$scope.post.dislikeNumber = dislikeNumber;
         	}
         });
-        
 	};
-	
 }
 
-function UploadImageController($scope, $rootScope, $location, $http, BlogPostService) {
+function UploadImageController($scope, $rootScope, $location, $http) {
     var fd = new FormData();
 	$http.post("/entry-webapp/rest/posts/getCategories", fd, {
 		transformRequest: angular.identity,
-		headers: {'Content-Type': 'application/json'}
+		headers: {'Content-Type': 'application/json', 'X-Access-Token': $rootScope.accessToken}
 	})
 	.then(function(response) {
 		var res = response.data;
@@ -226,12 +207,12 @@ function UploadImageController($scope, $rootScope, $location, $http, BlogPostSer
 		var fd = new FormData();
         fd.append('file', $scope.image);
         fd.append('username', $rootScope.user.name);
-        fd.append('category', $scope.imageCategories);
+        fd.append('category', $scope.imageCategory.categoryName);
         fd.append('description', $scope.description);
         
         $http.post("/entry-webapp/rest/posts/uploadImage", fd, {
             transformRequest: angular.identity,
-            headers: {'Content-Type': undefined}
+            headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
         })
         .then(function(response){
         	$scope.status = response.data;
@@ -268,9 +249,9 @@ function LoginController($scope, $rootScope, $location, $cookieStore, $http, Use
     		UserBridgeService.setNickName(authenticationResult.user.nickName);
     		
             UserService.get(function (user) {
-            	$rootScope.userId = authenticationResult.user.id;
+//            	$rootScope.userId = authenticationResult.user.id;
                 $rootScope.user = user;
-                $rootScope.avatar = user.avatar;
+//                $rootScope.avatar = user.avatar;
                 $location.path("/");
             });
         });
@@ -278,6 +259,18 @@ function LoginController($scope, $rootScope, $location, $cookieStore, $http, Use
 }
 
 function RegisterController($scope, $rootScope, $location, $http, $cookieStore, UserService, UserBridgeService) {
+	var fd = new FormData();
+	$http.post("/entry-webapp/rest/countries/getCountries", fd, {
+		transformRequest: angular.identity,
+		headers: {'Content-Type': 'application/json', 'X-Access-Token': $rootScope.accessToken}
+	})
+	.then(function(response) {
+		var res = response.data;
+		if (res) {
+			$scope.countries = res;
+		}
+	});
+	
 	$scope.register = function () {
 		var fd = new FormData();
         fd.append('file', $scope.avatar);
@@ -286,12 +279,12 @@ function RegisterController($scope, $rootScope, $location, $http, $cookieStore, 
         fd.append('password', $scope.password);
         fd.append('email', $scope.email);
         fd.append('phone', $scope.phone);
-        fd.append('country', $scope.country);
+        fd.append('country', $scope.country.countryName);
         fd.append('nickName', $scope.nickName);
         
         $http.post("/entry-webapp/rest/user/register", fd, {
             transformRequest: angular.identity,
-            headers: {'Content-Type': undefined}
+            headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
         })
         .then(function(response){
         	$scope.status = response.data;
@@ -311,19 +304,12 @@ function RegisterController($scope, $rootScope, $location, $http, $cookieStore, 
                     $rootScope.accessToken = accessToken;
                     
                     UserService.get(function (user) {
-                    	$rootScope.userId = authenticationResult.user.id;
+//                    	$rootScope.userId = authenticationResult.user.id;
                         $rootScope.user = user;
-                        $rootScope.avatar = user.avatar;
+//                        $rootScope.avatar = user.avatar;
                         $location.path("/");
                     });
                     
-                    /*$http({ method: "GET",
-        		    	    url: "/entry-webapp/rest/user/getAvatar",
-        		    	    params: {username: $scope.nickName}
-                    	}).then(function(response) {
-        			   		$rootScope.avatar = response.data;
-        			  	}
-        			);*/
                 });
         	}
         });
@@ -352,7 +338,7 @@ function UserDetailsController($scope, $routeParams, $rootScope, $location, $htt
         
         $http.post("/entry-webapp/rest/user/updateUser/"+ $routeParams.id, fd, {
             transformRequest: angular.identity,
-            headers: {'Content-Type': undefined}
+            headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
         })
 	    .then(function(response){
 	    	var res = response.data;
@@ -378,7 +364,7 @@ function UserRepositoryController($scope, $routeParams, $rootScope, $location, $
 	
 	$http.post("/entry-webapp/rest/posts/getPostByUser", fd, {
 		transformRequest: angular.identity,
-		headers: {'Content-Type': undefined}
+		headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
 	})
 	.then(function(response) {
 		var res = response.data;
@@ -400,7 +386,7 @@ function UserRepositoryController($scope, $routeParams, $rootScope, $location, $
         
         $http.post("/entry-webapp/rest/posts/deletePosts", fd, {
             transformRequest: angular.identity,
-            headers: {'Content-Type': undefined}
+            headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
         }).then(function(response){
             if (response.data) {
                 angular.forEach($scope.posts, function(post) {
@@ -408,14 +394,8 @@ function UserRepositoryController($scope, $routeParams, $rootScope, $location, $
                         if (post.post.id == p) {
                             var index = $scope.posts.indexOf(post);
                             $scope.postSelectedIndex.push(index);
-                            /*$scope.posts.splice(index, 1);*/
                         }
                     })
-
-                    /*if (veryfyCheckedPost(post.post.id, $scope.postSelectedArray)) {
-                        var index = $scope.posts.indexOf(post);
-                        $scope.posts.splice(index, 1);
-                    }*/
                 })
 
                 angular.forEach($scope.postSelectedIndex, function(index) {
@@ -425,23 +405,9 @@ function UserRepositoryController($scope, $routeParams, $rootScope, $location, $
             }
         });  
     };
-    
-    function veryfyCheckedPost (id, list) {
-        angular.forEach(list, function(p) {
-            if (id == p) {
-                return true;
-            }
-        })
-        return false;
-    };
 }
 
 var services = angular.module('app.services', ['ngResource']);
-
-services.factory('BlogPostService', function ($resource) {
-
-    return $resource('rest/blogposts/:id', {id: '@id'});
-});
 
 services.factory('PostService', function ($resource) {
 

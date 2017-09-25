@@ -31,9 +31,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
-import com.entry.wepapp.dao.blogpost.CategoryDao;
-import com.entry.wepapp.dao.blogpost.CommentDao;
-import com.entry.wepapp.dao.blogpost.PostDao;
+import com.entry.wepapp.dao.post.CategoryDao;
+import com.entry.wepapp.dao.post.CommentDao;
+import com.entry.wepapp.dao.post.PostDao;
 import com.entry.wepapp.entity.Category;
 import com.entry.wepapp.entity.Comment;
 import com.entry.wepapp.entity.Post;
@@ -193,25 +193,5 @@ public class PostController
 	public List<Category> getCategories() {
         return this.categoryDao.findAll();
     }
-    /*@POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("{id}")
-    public Post update(@PathParam("id") Long id, Post Post)
-    {
-        this.LOGGER.info("update(): " + Post);
-
-        return this.postDao.save(Post);
-    }
-
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("{id}")
-    public void delete(@PathParam("id") Long id)
-    {
-        this.LOGGER.info("delete(id)");
-
-        this.postDao.delete(id);
-    }*/
 
 }

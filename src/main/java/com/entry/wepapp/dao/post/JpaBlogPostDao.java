@@ -1,4 +1,4 @@
-package com.entry.wepapp.dao.blogpost;
+package com.entry.wepapp.dao.post;
 
 import org.springframework.transaction.annotation.Transactional;
 

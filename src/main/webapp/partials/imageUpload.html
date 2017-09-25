@@ -24,7 +24,10 @@
 						<option value="Animal">Animal</option>
 					</select> -->
 					
-					<select id="imageCategories" ng-model="imageCategories"  class="form-control" ng-options="category.categoryName for category in categories">
+					<select id="imageCategories" ng-model="imageCategory"  
+						class="form-control" ng-options="category.categoryName for category in categories">
+							<option value="">Select Category</option>
+					</select>
 				</div>
 			</div>
 			

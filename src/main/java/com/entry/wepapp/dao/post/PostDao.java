@@ -1,13 +1,12 @@
-package com.entry.wepapp.dao.blogpost;
+package com.entry.wepapp.dao.post;
 
 import java.util.List;
 
 import com.entry.wepapp.dao.Dao;
-import com.entry.wepapp.entity.BlogPost;
 import com.entry.wepapp.entity.Post;
 
 /**
- * Definition of a Data Access Object that can perform CRUD Operations for {@link BlogPost}s.
+ * Definition of a Data Access Object that can perform CRUD Operations for {@link PostDao}s.
  *
  */
 public interface PostDao extends Dao<Post, Long>

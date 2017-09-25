@@ -50,56 +50,36 @@
         </property>
     </bean>
     
-    <!-- <bean id="sessionFactory"
-	    class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-	    <property name="dataSource" ref="dataSource" />
-	</bean>
- -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
-    <bean id="blogPostDao" class="com.entry.wepapp.dao.blogpost.JpaBlogPostDao">
-    </bean>
+    <bean id="categoryDao" class="com.entry.wepapp.dao.post.JpaCategoryDao"></bean>
     
-    <bean id="categoryDao" class="com.entry.wepapp.dao.blogpost.JpaCategoryDao">
-    </bean>
+    <bean id="postDao" class="com.entry.wepapp.dao.post.JpaPostDao"></bean>
     
-    <bean id="postDao" class="com.entry.wepapp.dao.blogpost.JpaPostDao">
-    </bean>
-    <bean id="commentDao" class="com.entry.wepapp.dao.blogpost.JpaCommentDao">
-    </bean>
+    <bean id="commentDao" class="com.entry.wepapp.dao.post.JpaCommentDao"></bean>
 
-    <bean id="userDao" class="com.entry.wepapp.dao.user.JpaUserDao">
-    </bean>
+    <bean id="userDao" class="com.entry.wepapp.dao.user.JpaUserDao"></bean>
 
-    <bean id="accessTokenDao"
-          class="com.entry.wepapp.dao.accesstoken.JpaAccessTokenDao">
-    </bean>
+    <bean id="accessTokenDao" class="com.entry.wepapp.dao.accesstoken.JpaAccessTokenDao"></bean>
+    
+    <bean id="countryDao" class="com.entry.wepapp.dao.post.JpaCountryDao"></bean>
 
     <bean id="userService" class="com.entry.wepapp.service.DaoUserService">
         <constructor-arg ref="userDao"/>
         <constructor-arg ref="accessTokenDao"/>
     </bean>
     
-    <!-- <bean id="h2Server" class="org.h2.tools.Server" factory-method="createTcpServer"
-		init-method="start" destroy-method="stop" depends-on="h2WebServer">
-		<constructor-arg value="-tcp,-tcpAllowOthers,true,-tcpPort,9092" />
-	</bean>
-	<bean id="h2WebServer" class="org.h2.tools.Server" factory-method="createWebServer"
-		init-method="start" destroy-method="stop">
-		<constructor-arg value="-web,-webAllowOthers,true,-webPort,8082" />
-	</bean> -->
-
     <bean id="dataBaseInitializer"
           class="com.entry.wepapp.dao.DataBaseInitializer"
           init-method="initDataBase">
         <constructor-arg ref="passwordEncoder"/>
         <constructor-arg ref="userDao"/>
-        <constructor-arg ref="blogPostDao"/>
         <constructor-arg ref="categoryDao"/>
         <constructor-arg ref="postDao"/>
         <constructor-arg ref="commentDao"/>
+        <constructor-arg ref="countryDao"/>
     </bean>
 
     <!--
@@ -130,14 +110,18 @@
         <security:custom-filter ref="authenticationTokenProcessingFilter" position="PRE_AUTH_FILTER"/>
         <security:intercept-url pattern="/rest/user/authenticate" access="permitAll"/>
         <security:intercept-url pattern="/rest/user/upload" access="permitAll"/>
+        <security:intercept-url pattern="/rest/countries/getCountries" access="permitAll"/>
         
         <security:intercept-url method="GET" pattern="/rest/posts/**" access="hasRole('ADMIN')"/>
-        <security:intercept-url method="GET" pattern="/rest/comments/**" access="hasRole('ADMIN')"/>
+        <security:intercept-url method="PUT" pattern="/rest/posts/**" access="hasRole('ADMIN')"/>
+        <security:intercept-url method="POST" pattern="/rest/posts/**" access="hasRole('ADMIN')"/>
+        <security:intercept-url method="DELETE" pattern="/rest/posts/**" access="hasRole('ADMIN')"/>
         
-        <security:intercept-url method="GET" pattern="/rest/blogposts/**" access="hasRole('ADMIN')"/>
-        <security:intercept-url method="PUT" pattern="/rest/blogposts/**" access="hasRole('ADMIN')"/>
-        <security:intercept-url method="POST" pattern="/rest/blogposts/**" access="hasRole('ADMIN')"/>
-        <security:intercept-url method="DELETE" pattern="/rest/blogposts/**" access="hasRole('ADMIN')"/>
+        <security:intercept-url method="GET" pattern="/rest/comments/**" access="hasRole('ADMIN')"/>
+        <security:intercept-url method="PUT" pattern="/rest/comments/**" access="hasRole('ADMIN')"/>
+        <security:intercept-url method="POST" pattern="/rest/comments/**" access="hasRole('ADMIN')"/>
+        <security:intercept-url method="DELETE" pattern="/rest/comments/**" access="hasRole('ADMIN')"/>
+        
     </security:http>
 
     <bean id="unauthorizedEntryPoint"

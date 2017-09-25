@@ -41,7 +41,6 @@ public class User implements Entity, UserDetails {
 	@Column(unique = true, length = 40, nullable = false)
 	private String nickName;
 
-//	@JsonIgnore
 	@Column(name="avatar", nullable = true)
 	private String avatar;
 

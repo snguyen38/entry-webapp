@@ -76,8 +76,9 @@ public class UserController
             throw new WebApplicationException(Response.Status.UNAUTHORIZED);
         }
         UserDetails userDetails = (UserDetails) principal;
-        String avatarDir = AvatarUtils.getValidAvatarDirectory(context.getRealPath(""), this.userService.findUserByNickName(userDetails.getUsername()).getAvatar());
-        return new UserTransfer(userDetails.getUsername(), avatarDir, this.createRoleMap(userDetails));
+        User user = this.userService.findUserByNickName(userDetails.getUsername());
+        String avatarDir = AvatarUtils.getValidAvatarDirectory(context.getRealPath(""), user.getAvatar());
+        return new UserTransfer(user.getId(), userDetails.getUsername(), avatarDir, this.createRoleMap(userDetails));
     }
 
     /**

@@ -72,11 +72,6 @@
             <artifactId>jersey-spring4</artifactId>
             <version>${version.org.glassfish.jersey}</version>
         </dependency>
-		<!-- <dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>4.2.4.RELEASE</version>
-		</dependency> -->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>

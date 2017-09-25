@@ -6,23 +6,23 @@ import javax.persistence.Id;
 
 @SuppressWarnings("serial")
 @javax.persistence.Entity
-public class Category implements Entity
+public class Country implements Entity
 {
     @Id
     @GeneratedValue
     private Long id;
 
     @Column(nullable = false)
-    private String categoryName;
+    private String countryName;
 
-    protected Category()
+    protected Country()
     {
         /* Reflection instantiation */
     }
 
-    public Category(String categoryName)
+    public Country(String countryName)
     {
-        this.categoryName = categoryName;
+        this.countryName = countryName;
     }
 
     @Override
@@ -31,12 +31,12 @@ public class Category implements Entity
         return this.id;
     }
 
-    public String getCategoryName() {
-		return categoryName;
+    public String getCountryName() {
+		return countryName;
 	}
 
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
+	public void setCountryName(String countryName) {
+		this.countryName = countryName;
 	}
 
 }

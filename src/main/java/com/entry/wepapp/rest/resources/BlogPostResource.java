@@ -1,4 +1,4 @@
-package com.entry.wepapp.rest.resources;
+/*package com.entry.wepapp.rest.resources;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.entry.wepapp.dao.blogpost.BlogPostDao;
+import com.entry.wepapp.dao.post.BlogPostDao;
 import com.entry.wepapp.entity.BlogPost;
 
 @Component
@@ -41,9 +41,9 @@ public class BlogPostResource
         this.LOGGER.info("list()");
 
 //        ObjectWriter viewWriter;
-        /*if (this.isAdmin()) {
+        if (this.isAdmin()) {
             viewWriter = this.mapper.writerWithView(JsonViews.Admin.class);
-        } else {*/
+        } else {
 //            viewWriter = this.mapper.writerWithView(JsonViews.Admin.class);
 //        }
         List<BlogPost> allEntries = this.blogPostDao.findAll();
@@ -97,7 +97,7 @@ public class BlogPostResource
         this.blogPostDao.delete(id);
     }
 
-    /*private boolean isAdmin()
+    private boolean isAdmin()
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
@@ -109,5 +109,6 @@ public class BlogPostResource
         UserDetails userDetails = (UserDetails) principal;
 
         return userDetails.getAuthorities().contains(Role.ADMIN);
-    }*/
+    }
 }
+*/

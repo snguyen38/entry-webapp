@@ -10,7 +10,7 @@ app.directive('enterEvent', function ($http, CommentService) {
                     
                     $http.post("/entry-webapp/rest/comments/postComment", fd, {
                         transformRequest: angular.identity,
-                        headers: {'Content-Type': undefined}
+                        headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
                     }).then(function(response){
                     	if (response.data) {
                     		scope.comment = '';
@@ -21,7 +21,7 @@ app.directive('enterEvent', function ($http, CommentService) {
                             
                             $http.post("/entry-webapp/rest/comments/getCommentsByPost", fd, {
                                 transformRequest: angular.identity,
-                                headers: {'Content-Type': undefined}
+                                headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
                             }).then(function(response){
                             	if (response.data) {
                             		scope.comments  = response.data;

@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
-import com.entry.wepapp.dao.blogpost.CommentDao;
+import com.entry.wepapp.dao.post.CommentDao;
 import com.entry.wepapp.entity.Comment;
 
 @Component
