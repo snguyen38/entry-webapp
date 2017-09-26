@@ -116,17 +116,6 @@ public class DataBaseInitializer
         this.commentDao.save(comment3);
         this.commentDao.save(comment4);
         this.commentDao.save(comment5);
-        
-        System.out.println(this.commentDao.findByPost(postTemp.getId()).get(0).getContent());
-        System.out.println(this.commentDao.findByPost(postTemp.getId()).size());
 
-       /* long timestamp = System.currentTimeMillis() - (1000 * 60 * 60 * 24);
-        for (int i = 0; i < 10; i++) {
-            BlogPost blogPost = new BlogPost();
-            blogPost.setContent("This is example content " + i);
-            blogPost.setDate(new Date(timestamp));
-            this.blogPostDao.save(blogPost);
-            timestamp += 1000 * 60 * 60;
-        }*/
     }
 }

@@ -158,7 +158,7 @@ public class UserController
 			@FormDataParam("nickName") String nickName) throws Exception {
 		try {
 			Map<String, Boolean> res = appHelper.checkUserExist(email, nickName);
-			if (!ObjectUtils.isEmpty(res) /*&& !res.get("status")*/) {
+			if (!ObjectUtils.isEmpty(res)) {
 				return Response.status(400).entity(res).build();
 			}
 			

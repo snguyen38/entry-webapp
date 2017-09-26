@@ -12,7 +12,7 @@ import com.entry.wepapp.dao.JpaDao;
 import com.entry.wepapp.entity.Category;
 
 /**
- * JPA Implementation of a {@link PostDao}.
+ * JPA Implementation of a {@link CategoryDao}.
  *
  */
 public class JpaCategoryDao extends JpaDao<Category, Long> implements CategoryDao

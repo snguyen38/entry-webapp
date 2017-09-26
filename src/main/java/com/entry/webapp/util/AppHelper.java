@@ -23,9 +23,6 @@ public class AppHelper {
 		if (!StringUtils.isEmpty(email)) {
 			User user4Email = this.userService.findUserByEmail(email);
 			if (!ObjectUtils.isEmpty(user4Email)) {
-				/*res.put("email", true);
-				res.put("status", true);
-			} else {*/
 				res.put("status", false);
 				res.put("email", false); 
 			}
@@ -35,16 +32,11 @@ public class AppHelper {
 			if (!StringUtils.isEmpty(nickname)) {
 				User user4Nickname = this.userService.findUserByNickName(nickname);
 				if (!ObjectUtils.isEmpty(user4Nickname)) {
-					/*res.put("nickname", true);
-					res.put("status", true);
-				} else {*/
 					res.put("status", false);
 					res.put("nickname", false);
 				}
 			}
 		} catch (UsernameNotFoundException e) {
-//			res.put("nickname", true);
-//			res.put("status", true);
 			return res;
 		}
 		return res;

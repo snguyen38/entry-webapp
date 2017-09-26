@@ -165,18 +165,22 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'app.services'])
     };
 }]);
 
-function MainController($rootScope, $scope, PostService) {
-    $scope.posts = PostService.query();
+function MainController($rootScope, $scope, $location, PostService) {
+	if ($rootScope.accessToken == undefined) {
+		$location.path("/login");
+	} else {
+    	$scope.posts = PostService.query();
 
-    $scope.imageMouseOver = function (event) {
-		var likeEle = angular.element( event.target.nextElementSibling );
-		likeEle.removeClass('hidden');
-	};
-	
-	$scope.imageMouseLeave = function () {
-		var likeEle = angular.element( event.target.nextElementSibling );
-		likeEle.addClass('hidden');
-	};
+	    $scope.imageMouseOver = function (event) {
+			var likeEle = angular.element( event.target.nextElementSibling );
+			likeEle.removeClass('hidden');
+		};
+		
+		$scope.imageMouseLeave = function () {
+			var likeEle = angular.element( event.target.nextElementSibling );
+			likeEle.addClass('hidden');
+		};
+    }
 }
 
 function ImageDetailsController($rootScope, $scope, $routeParams, $location, $http, PostService) {
@@ -251,7 +255,7 @@ function UploadImageController($scope, $rootScope, $location, $http) {
 	};
 }
 
-function LoginController($scope, $rootScope, $location, $cookieStore, $http, UserService, UserBridgeService) {
+function LoginController($scope, $rootScope, $location, $cookieStore, $http, UserService) {
 
     $scope.rememberMe = false;
 
@@ -274,7 +278,7 @@ function LoginController($scope, $rootScope, $location, $cookieStore, $http, Use
     };
 }
 
-function RegisterController($scope, $rootScope, $location, $http, $cookieStore, UserService, UserBridgeService) {
+function RegisterController($scope, $rootScope, $location, $http, $cookieStore, UserService) {
 	delete $rootScope.emailExist;
 	delete $rootScope.nicknameExist;
 	
@@ -303,17 +307,11 @@ function RegisterController($scope, $rootScope, $location, $http, $cookieStore, 
         
         $http.post(window.location.pathname + "rest/user/register", fd, {
             transformRequest: angular.identity,
-            headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
+            headers: {'Content-Type': undefined}
         })
         .then(function(response){
         	var res = response.data;
         	if (res) {
-//        		if (res.data) {
-//            		$rootScope.info = "Image upload successfully";
-//            	} else {
-//                    $rootScope.error = "Image upload failed";
-//                }
-        		
     			UserService.authenticate($.param({
                     username: $scope.nickName,
                     password: $scope.password
@@ -331,7 +329,7 @@ function RegisterController($scope, $rootScope, $location, $http, $cookieStore, 
 	};
 }
 
-function UserDetailsController($scope, $routeParams, $rootScope, $location, $http, $cookieStore, UserService, UserBridgeService) {
+function UserDetailsController($scope, $routeParams, $rootScope, $location, $http, $cookieStore, UserService) {
 	var fd = new FormData();
 	$http.post(window.location.pathname + "rest/countries/getCountries", fd, {
 		transformRequest: angular.identity,
@@ -395,7 +393,7 @@ function UserDetailsController($scope, $routeParams, $rootScope, $location, $htt
 	};
 }
 
-function UserRepositoryController($scope, $routeParams, $rootScope, $location, $http, $cookieStore, UserService, UserBridgeService) {
+function UserRepositoryController($scope, $routeParams, $rootScope, $location, $http, $cookieStore, UserService) {
 	var fd = new FormData();
 	
 	fd.append('userId', $routeParams.id);
@@ -406,8 +404,10 @@ function UserRepositoryController($scope, $routeParams, $rootScope, $location, $
 	})
 	.then(function(response) {
 		var res = response.data;
-		if (res) {
+		if (res && res.length > 0) {
 			$scope.posts = res;
+		} else {
+			$scope.userNotHaveImage = true;
 		}
 	});
 	

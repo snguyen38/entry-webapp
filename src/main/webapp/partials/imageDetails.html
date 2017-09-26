@@ -16,8 +16,8 @@
 	
 	<div class="col-md-4">
 		<form name="imageDetailForm" class="form-horizontal">
-			<div class="form-group">
-				<b class="row col-md-12">User upload: {{username}}</b>
+			<div class="form-group uploadBy">
+				<p class="row col-md-12">User upload: <b>{{username}}</b></p>
 			</div>
 			<div class="form-group">
 				<p class="row col-md-12">{{post.date | date}}</p>
@@ -43,10 +43,10 @@
 			<hr/>
 			
 			<!-- comment zone-->
-			<div>
+			<div class="form-group">
 				<div ng-repeat="comment in comments">
 					<div class="row comment">
-						<div class="col-sm-4">
+						<div class="col-sm-4 commentRow">
 							<b class="row comment">{{comment.username}}</b>
 							<p class="row comment">{{comment.date | date}}</p>
 						</div>

@@ -119,7 +119,6 @@ public class PostController
         
         List<Comment> comments = this.commentDao.findByPost(id);
         res.put("comments", comments);
-        
         User user = this.userService.findUserById(post.getId());
         if (!ObjectUtils.isEmpty(user)) {
         	res.put("username", user.getNickName());

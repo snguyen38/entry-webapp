@@ -26,14 +26,8 @@ public class CommentController
 {
 	Logger LOGGER = LogManager.getRootLogger();
 
-//    @Autowired
-//    private PostDao postDao;
-    
     @Autowired
     private CommentDao commentDao;
-    
-//    @Autowired
-//    private UserService userService;
     
     @Context
 	private ServletContext context;
@@ -42,7 +36,7 @@ public class CommentController
 	@Path("/postComment")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public boolean registerUser(@FormDataParam("postId") Long postId,
+	public boolean postComment(@FormDataParam("postId") Long postId,
 			@FormDataParam("username") String username,
 			@FormDataParam("content") String content) {
 		try {
@@ -63,60 +57,5 @@ public class CommentController
 
         return allEntries;
     }
-
-    /*@SuppressWarnings({ "rawtypes", "unchecked" })
-	@GET
-    @Produces(MediaType.APPLICATION_JSON)
-//    @Path("{postId}/{postId}/{postId}")
-    public Map read(@PathParam("id") Long id)
-    {
-    	Map res = new HashMap();
-
-        Post post = this.postDao.find(id);
-        if (post == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-        
-        List<Comment> comments = this.commentDao.findByPost(id);
-        
-        res.put("post", post);
-        res.put("comments", comments);
-        
-        User user = this.userService.findUserById(post.getUserId());
-        res.put("username", user.getNickName());
-
-        return res;
-    }
-
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Post create(Post Post)
-    {
-        this.LOGGER.info("create(): " + Post);
-
-        return this.postDao.save(Post);
-    }
-
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("{id}")
-    public Post update(@PathParam("id") Long id, Post Post)
-    {
-        this.LOGGER.info("update(): " + Post);
-
-        return this.postDao.save(Post);
-    }
-
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("{id}")
-    public void delete(@PathParam("id") Long id)
-    {
-        this.LOGGER.info("delete(id)");
-
-        this.postDao.delete(id);
-    }*/
 
 }
