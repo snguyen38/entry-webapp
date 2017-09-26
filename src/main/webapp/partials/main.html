@@ -54,7 +54,7 @@
 <hr/>
 
 <div ng-repeat="post in posts  | filter :{category:imageCategories, username:username} | orderBy:orderBy:sort | limitTo: limitTo">
-	<a href="#!/edit/{{post.id}}">
+	<a href="#!/imageDetails/{{post.id}}">
 		<div class="image" ng-mouseover="imageMouseOver($event)" ng-mouseleave="imageMouseLeave()">
 			<img class="post" ng-src="{{post.link}}"  >
 			    <div class="text hidden">

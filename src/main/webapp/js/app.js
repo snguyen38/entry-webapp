@@ -7,9 +7,9 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'app.services'])
                 controller: UploadImageController
             });
 
-            $routeProvider.when('/edit/:id', {
-                templateUrl: 'partials/edit.html',
-                controller: EditController
+            $routeProvider.when('/imageDetails/:id', {
+                templateUrl: 'partials/imageDetails.html',
+                controller: ImageDetailsController
             });
 
             $routeProvider.when('/login', {
@@ -17,8 +17,8 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'app.services'])
                 controller: LoginController
             });
             
-            $routeProvider.when('/register', {
-                templateUrl: 'partials/register.html',
+            $routeProvider.when('/registerUser', {
+                templateUrl: 'partials/registerUser.html',
                 controller: RegisterController
             });
             
@@ -52,7 +52,28 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'app.services'])
                             if (status == 401) {
                                 $location.path("/login");
                             } else {
-                                $rootScope.error = method + " on " + url + " failed with status " + status;
+                            	if (status == 400) {//window.location.pathname
+                            		if (url.indexOf('rest/user/register') > 0 ||
+                            				url.indexOf('rest/user/updateUser') > 0) {
+                            			if (rejection.data.email == undefined) {
+	                            			$rootScope.emailExist = false;
+	                            		} else {
+	                            			$rootScope.emailExist = !rejection.data.email || !rejection.data.email;
+	                            		}
+                            			
+	                            		if (rejection.data.nickname == undefined) {
+	                            			$rootScope.nicknameExist = false;
+	                            		} else {
+	                            			$rootScope.nicknameExist = !rejection.data.nickname;
+	                            		}
+	                            	}
+                            	} else {
+	                            	if (url == 'rest/user/authenticate' && status == 500 ) {
+	                            		$rootScope.error = "Incorrect username or password"
+	                            	} else {
+	                            		$rootScope.error = method + " on " + url + " failed with status " + status;
+	                            	}
+                            	}
                             }
 
                             return $q.reject(rejection);
@@ -84,10 +105,12 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'app.services'])
         }]
     ).run(function ($rootScope, $location, $cookieStore, UserService) {
 
-    /* Reset error when a new view is loaded */
+    /* Reset comment info when a new view is loaded */
     $rootScope.$on('$viewContentLoaded', function () {
         delete $rootScope.error;
         delete $rootScope.info;
+        delete $rootScope.emailExist;
+    	delete $rootScope.nicknameExist;
     });
 
     $rootScope.hasRole = function (role) {
@@ -118,7 +141,6 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'app.services'])
         $rootScope.accessToken = accessToken;
         UserService.get(function (user) {
             $rootScope.user = user;
-            $rootScope.avatar = user.avatar;
             $location.path(originalPath);
         });
     }
@@ -127,13 +149,16 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'app.services'])
 }).directive('fileModel', ['$parse', function ($parse) {
     return {
         restrict: 'A',
-        link: function(scope, element, attrs) {
+        require:'ngModel',
+        link: function(scope, element, attrs, ngModel) {
             var model = $parse(attrs.fileModel);
             var modelSetter = model.assign;
             
             element.bind('change', function(){
                 scope.$apply(function(){
                     modelSetter(scope, element[0].files[0]);
+                    ngModel.$setViewValue(element.val());
+                    ngModel.$render();
                 });
             });
         }
@@ -154,7 +179,7 @@ function MainController($rootScope, $scope, PostService) {
 	};
 }
 
-function EditController($rootScope, $scope, $routeParams, $location, $http, PostService) {
+function ImageDetailsController($rootScope, $scope, $routeParams, $location, $http, PostService) {
 	$scope.imageMouseOver = function () {
 		$scope.showLike = true;
 	};
@@ -175,7 +200,7 @@ function EditController($rootScope, $scope, $routeParams, $location, $http, Post
         fd.append('likeNumber', likeNumber);
         fd.append('dislikeNumber', dislikeNumber);
         
-        $http.post("/entry-webapp/rest/posts/updateLikeAndDislike", fd, {
+        $http.post(window.location.pathname + "rest/posts/updateLikeAndDislike", fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
         }).then(function(response){
@@ -189,7 +214,7 @@ function EditController($rootScope, $scope, $routeParams, $location, $http, Post
 
 function UploadImageController($scope, $rootScope, $location, $http) {
     var fd = new FormData();
-	$http.post("/entry-webapp/rest/posts/getCategories", fd, {
+	$http.post(window.location.pathname + "rest/posts/getCategories", fd, {
 		transformRequest: angular.identity,
 		headers: {'Content-Type': 'application/json', 'X-Access-Token': $rootScope.accessToken}
 	})
@@ -210,7 +235,7 @@ function UploadImageController($scope, $rootScope, $location, $http) {
         fd.append('category', $scope.imageCategory.categoryName);
         fd.append('description', $scope.description);
         
-        $http.post("/entry-webapp/rest/posts/uploadImage", fd, {
+        $http.post(window.location.pathname + "rest/posts/uploadImage", fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
         })
@@ -240,13 +265,6 @@ function LoginController($scope, $rootScope, $location, $cookieStore, $http, Use
             if ($scope.rememberMe) {
                 $cookieStore.put('accessToken', accessToken);
             }
-            
-            UserBridgeService.setFirstName(authenticationResult.user.firstName);
-    		UserBridgeService.setLastName(authenticationResult.user.lastName);
-    		UserBridgeService.setEmail(authenticationResult.user.email);
-    		UserBridgeService.setPhone(authenticationResult.user.phone);
-    		UserBridgeService.setCountry(authenticationResult.user.country);
-    		UserBridgeService.setNickName(authenticationResult.user.nickName);
     		
             UserService.get(function (user) {
                 $rootScope.user = user;
@@ -257,8 +275,11 @@ function LoginController($scope, $rootScope, $location, $cookieStore, $http, Use
 }
 
 function RegisterController($scope, $rootScope, $location, $http, $cookieStore, UserService, UserBridgeService) {
+	delete $rootScope.emailExist;
+	delete $rootScope.nicknameExist;
+	
 	var fd = new FormData();
-	$http.post("/entry-webapp/rest/countries/getCountries", fd, {
+	$http.post(window.location.pathname + "rest/countries/getCountries", fd, {
 		transformRequest: angular.identity,
 		headers: {'Content-Type': 'application/json', 'X-Access-Token': $rootScope.accessToken}
 	})
@@ -280,21 +301,20 @@ function RegisterController($scope, $rootScope, $location, $http, $cookieStore, 
         fd.append('country', $scope.country);
         fd.append('nickName', $scope.nickName);
         
-        $http.post("/entry-webapp/rest/user/register", fd, {
+        $http.post(window.location.pathname + "rest/user/register", fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
         })
         .then(function(response){
-        	$scope.status = response.data;
-        	if ($scope.status) {
-        		UserBridgeService.setFirstName($scope.firstName);
-        		UserBridgeService.setLastName($scope.lastName);
-        		UserBridgeService.setEmail($scope.email);
-        		UserBridgeService.setPhone($scope.phone);
-        		UserBridgeService.setCountry($scope.country);
-        		UserBridgeService.setNickName($scope.nickName);
+        	var res = response.data;
+        	if (res) {
+//        		if (res.data) {
+//            		$rootScope.info = "Image upload successfully";
+//            	} else {
+//                    $rootScope.error = "Image upload failed";
+//                }
         		
-        		UserService.authenticate($.param({
+    			UserService.authenticate($.param({
                     username: $scope.nickName,
                     password: $scope.password
                 }), function (authenticationResult) {
@@ -305,7 +325,6 @@ function RegisterController($scope, $rootScope, $location, $http, $cookieStore, 
                         $rootScope.user = user;
                         $location.path("/");
                     });
-                    
                 });
         	}
         });
@@ -314,7 +333,7 @@ function RegisterController($scope, $rootScope, $location, $http, $cookieStore, 
 
 function UserDetailsController($scope, $routeParams, $rootScope, $location, $http, $cookieStore, UserService, UserBridgeService) {
 	var fd = new FormData();
-	$http.post("/entry-webapp/rest/countries/getCountries", fd, {
+	$http.post(window.location.pathname + "rest/countries/getCountries", fd, {
 		transformRequest: angular.identity,
 		headers: {'Content-Type': 'application/json', 'X-Access-Token': $rootScope.accessToken}
 	})
@@ -328,7 +347,7 @@ function UserDetailsController($scope, $routeParams, $rootScope, $location, $htt
 	fd = new FormData();
 	fd.append('id', $routeParams.id);
 	
-	$http.post("/entry-webapp/rest/user/getUserById", fd, {
+	$http.post(window.location.pathname + "rest/user/getUserById", fd, {
 		transformRequest: angular.identity,
 		headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
 	})
@@ -338,21 +357,17 @@ function UserDetailsController($scope, $routeParams, $rootScope, $location, $htt
 			$scope.firstName = res.firstName;
 			$scope.lastName = res.lastName;
 			$scope.email = res.email;
-			$scope.phone = res.phone;
+			$scope.phone = parseInt(res.phone);
 			$scope.country = res.country;
 			$scope.nickName = res.nickName;
 		}
 	});
 	
-	/*$scope.firstName = UserBridgeService.getFirstName();
-	$scope.lastName = UserBridgeService.getLastName();
-	$scope.email = UserBridgeService.getEmail();
-	$scope.phone = UserBridgeService.getPhone();
-	$scope.country = UserBridgeService.getCountry();
-	$scope.nickName = UserBridgeService.getNickName();*/
-	
-	
 	$scope.updateUser = function () {
+		delete $rootScope.error;
+        delete $rootScope.info;
+        delete $rootScope.nicknameExist;
+		
 		var fd = new FormData();
 
         fd.append('file', $scope.avatar);
@@ -363,7 +378,7 @@ function UserDetailsController($scope, $routeParams, $rootScope, $location, $htt
         fd.append('country', $scope.country);
         fd.append('nickName', $scope.nickName);
         
-        $http.post("/entry-webapp/rest/user/updateUser/"+ $routeParams.id, fd, {
+        $http.post(window.location.pathname + "rest/user/updateUser/"+ $routeParams.id, fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
         })
@@ -371,14 +386,10 @@ function UserDetailsController($scope, $routeParams, $rootScope, $location, $htt
 	    	var res = response.data;
 	    	if (res) {
 	    		$rootScope.user.name = res.username;
-	    		
-	    		$http({ method: "GET",
-		    	    url: "/entry-webapp/rest/user/getAvatar",
-		    	    params: {username: $scope.nickName}
-            	}).then(function(response) {
-				   		$rootScope.avatar = response.data;
-				  	}
-				);
+	    		$rootScope.user.avatar = res.avatar;
+	    		$rootScope.info = "User update successfully";
+	    	} else {
+	    		$rootScope.error = "User update failed";
 	    	}
 	    });
 	};
@@ -389,7 +400,7 @@ function UserRepositoryController($scope, $routeParams, $rootScope, $location, $
 	
 	fd.append('userId', $routeParams.id);
 	
-	$http.post("/entry-webapp/rest/posts/getPostByUser", fd, {
+	$http.post(window.location.pathname + "rest/posts/getPostByUser", fd, {
 		transformRequest: angular.identity,
 		headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
 	})
@@ -411,7 +422,7 @@ function UserRepositoryController($scope, $routeParams, $rootScope, $location, $
         var fd = new FormData();
         fd.append('postIds', JSON.stringify($scope.postSelectedArray));
         
-        $http.post("/entry-webapp/rest/posts/deletePosts", fd, {
+        $http.post(window.location.pathname + "rest/posts/deletePosts", fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined, 'X-Access-Token': $rootScope.accessToken}
         }).then(function(response){

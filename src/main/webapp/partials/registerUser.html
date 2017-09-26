@@ -1,18 +1,17 @@
 <div class="page-header">
-	<h2>User Details</h2>
+	<h2>Registration</h2>
 </div>
 
 <div class="row">
-
 	<div class="col-md-6">
-		<form name="userDetailsForm" class="form-horizontal">
+		<form name="registerForm" class="form-horizontal">
 			<div class="form-group">
 				<label for="firstName" class="col-sm-4 control-label">Fisrt Name:</label>
 				<div class="col-sm-8">
-					<input id="firstName" name="firstName" ng-model="firstName" type="text" class="form-control" required/>
+					<input id="firstName" name="firstName" ng-model="firstName" type="text" class="form-control" required autofocus/>
 					
 					<span class="label label-warning" 
-							ng-show="userDetailsForm.firstName.$touched && userDetailsForm.firstName.$invalid">
+							ng-show="registerForm.firstName.$touched && registerForm.firstName.$invalid">
 						The first name is required.
 					</span>
 				</div>
@@ -24,7 +23,7 @@
 					<input id="lastName" name="lastName" ng-model="lastName" type="text" class="form-control" required/>
 					
 					<span class="label label-warning" 
-							ng-show="userDetailsForm.lastName.$touched && userDetailsForm.lastName.$invalid">
+							ng-show="registerForm.lastName.$touched && registerForm.lastName.$invalid">
 						The last name is required.
 					</span>
 				</div>
@@ -33,10 +32,10 @@
 			<div class="form-group">
 				<label for="password" class="col-sm-4 control-label">Password:</label>
 				<div class="col-sm-8">
-					<input id="password" name="password" ng-model="password" type="password" class="form-control" required autofocus/>
+					<input id="password" name="password" ng-model="password" type="password" class="form-control" required/>
 					
 					<span class="label label-warning" 
-							ng-show="userDetailsForm.password.$invalid">
+							ng-show="registerForm.password.$touched && registerForm.password.$invalid">
 						The password is required.
 					</span>
 				</div>
@@ -48,12 +47,12 @@
 					<input id="confirmPassword" name="confirmPassword" ng-model="confirmPassword" type="password" class="form-control" required/>
 					
 					<span class="label label-warning" 
-							ng-show="userDetailsForm.confirmPassword.$invalid">
+							ng-show="registerForm.confirmPassword.$touched && registerForm.confirmPassword.$invalid">
 						The confirm password is required.
 					</span>
 					
 					<span class="label label-warning" 
-							ng-show="userDetailsForm.confirmPassword.$touched && password != confirmPassword">
+							ng-show="registerForm.confirmPassword.$touched && password != confirmPassword">
 						The confirm password must be the same with password.
 					</span>
 				</div>
@@ -62,7 +61,22 @@
 			<div class="form-group">
 				<label for="email" class="col-sm-4 control-label">Email:</label>
 				<div class="col-sm-8">
-					<input id="email" ng-model="email" ng-disabled="true" type="email" class="form-control" />
+					<input id="email" name="email" ng-model="email" type="email" class="form-control" required/>
+					
+					<span class="label label-warning" 
+							ng-show="registerForm.email.$touched && registerForm.email.$error.required">
+						The email is required.
+					</span>
+					
+					<span class="label label-warning" 
+							ng-show="registerForm.email.$touched && registerForm.email.$error.email">
+						The email is invalid.
+					</span>
+					
+					<span class="label label-danger" 
+							ng-show="emailExist">
+						The email is exits.
+					</span>
 				</div>
 			</div>
 			
@@ -72,17 +86,17 @@
 					<input id="phone" name="phone" ng-model="phone" type="number" class="form-control" required ng-minlength="8" ng-maxlength="15" />
 					
 					<span class="label label-warning" 
-							ng-show="userDetailsForm.phone.$touched && userDetailsForm.phone.$error.required">
+							ng-show="registerForm.phone.$touched && registerForm.phone.$error.required">
 						The phone number is required.
 					</span>
 					
 					<span class="label label-warning" 
-							ng-show="userDetailsForm.phone.$touched && userDetailsForm.phone.$error.number">
+							ng-show="registerForm.phone.$touched && registerForm.phone.$error.number">
 						The valid phone number is required.
 					</span>
 					
 					<span class="label label-info" 
-							ng-show="userDetailsForm.phone.$touched && (userDetailsForm.phone.$error.minlength || userDetailsForm.phone.$error.maxlength)">
+							ng-show="registerForm.phone.$touched && (registerForm.phone.$error.minlength || registerForm.phone.$error.maxlength)">
 						The phone number should be 8 - 15 digits
 					</span>
 					
@@ -98,7 +112,7 @@
 					</select>
 					
 					<span class="label label-warning" 
-							ng-show="userDetailsForm.country.$touched && userDetailsForm.country.$invalid">
+							ng-show="registerForm.country.$touched && registerForm.country.$invalid">
 						The country is required.
 					</span>
 				</div>
@@ -110,7 +124,7 @@
 					<input id="nickName" name="nickName" ng-model="nickName" type="text" class="form-control" required/>
 					
 					<span class="label label-warning" 
-							ng-show="userDetailsForm.nickName.$touched && userDetailsForm.nickName.$invalid">
+							ng-show="registerForm.nickName.$touched && registerForm.nickName.$invalid">
 						The nickname is required.
 					</span>
 					
@@ -121,16 +135,17 @@
 				</div>
 			</div>
 			
+			
 			<div class="form-group">
 				<label for="avatar" class="col-sm-4 control-label">Avatar:</label>
 				<div class="col-sm-8">
-					<input id="avatar" type="file" file-model="avatar" ng-model="avatarValue" accept="image/*" class="form-control" />
+					<input id="avatar" type="file" file-model="avatar" ng-model="avatarValue" accept="image/*" class="form-control"/>
 				</div>
 			</div>
 			
 			<div class="form-group">
 				<div class="col-sm-8 col-sm-offset-4">
-					<input type="submit" ng-disabled="userDetailsForm.$invalid" value="Update" class="btn btn-primary" ng-click="updateUser()"/>
+					<input type="submit" ng-disabled="registerForm.$invalid" value="Register" class="btn btn-primary" ng-click="register()"/>
 				</div>
 			</div>
 		</form>

@@ -12,7 +12,7 @@
 
 <div ng-repeat="post in posts">
 	<div class="row">
-		<div class="col-md-3">
+		<div class="col-md-3 image-row">
 			<input class="userRepo" type="checkbox" ng-model="post.post.selected" value={{post.post.id}}>
 				<img class="image-repo" ng-src="{{post.post.link}}">
 			</input>

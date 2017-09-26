@@ -5,42 +5,49 @@
 <div class="row">
 
 	<div class="col-md-6">
-		<form class="form-horizontal">
+		<form name="imageUploadForm" class="form-horizontal">
 			<div class="form-group">
 				<label for="image" class="col-sm-4 control-label">Image:</label>
 				<div class="col-sm-8">
-					<input id="image" type="file" file-model="image" accept="image/*" class="form-control" />
+					<input id="image" name="image" type="file" file-model="image" accept="image/*" ng-model="imageValue" class="form-control" required/>
+				
+					<span class="label label-warning" 
+							ng-show="imageUploadForm.image.$invalid">
+						Please select an image.
+					</span>
 				</div>
 			</div>
 
 			<div class="form-group">
 				<label for="imageCategories" class="col-sm-4 control-label">Categories:</label>
 				<div class="col-sm-8">
-					<!-- <select  id="imageCategories" ng-model="imageCategories"  class="form-control">
-						<option value="People">People</option>
-						<option value="Building">Building</option>
-						<option value="Landscape">Landscape</option>
-						<option value="Nature">Nature</option>
-						<option value="Animal">Animal</option>
-					</select> -->
-					
-					<select id="imageCategories" ng-model="imageCategory"  
+					<select id="imageCategories" name="imageCategories" ng-model="imageCategory" required
 						class="form-control" ng-options="category.categoryName for category in categories">
 							<option value="">Select Category</option>
 					</select>
+					
+					<span class="label label-warning" 
+							ng-show="imageUploadForm.imageCategories.$touched && imageUploadForm.imageCategories.$invalid">
+						The category is required.
+					</span>
 				</div>
 			</div>
 			
 			<div class="form-group">
 				<label for="description" class="col-sm-4 control-label">Description:</label>
 				<div class="col-sm-8">
-					<textarea id="description" ng-model="description" rows="5" class="form-control"></textarea>
+					<textarea id="description" name="description" ng-model="description" rows="5" class="form-control" required/>
+					
+					<span class="label label-warning" 
+							ng-show="imageUploadForm.description.$touched && imageUploadForm.description.$invalid">
+						The description is required.
+					</span>
 				</div>
 			</div>
 			
 			<div class="form-group">
 				<div class="col-sm-8 col-sm-offset-4">
-					<input type="submit" value="Upload" class="btn btn-primary" ng-click="uploadImage()"/>
+					<input type="submit" value="Upload" ng-disabled="imageUploadForm.$invalid" class="btn btn-primary" ng-click="uploadImage()"/>
 				</div>
 			</div>
 			

@@ -1,3 +1,4 @@
+package com.entry.wepapp.rest.controller;
 /*package com.entry.wepapp.rest.resources;
 
 import java.io.IOException;

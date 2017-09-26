@@ -5,17 +5,25 @@
 <div class="row">
 
 	<div class="col-md-6">
-		<form class="form-horizontal">
+		<form name="loginForm" class="form-horizontal">
 			<div class="form-group">
 				<label for="username" class="col-sm-3 control-label">User Name:</label>
 				<div class="col-sm-9">
-					<input id="username" ng-model="username" type="text" class="form-control" />
+					<input name="username" ng-model="username" type="text" class="form-control" required autofocus/>
+					<span class="label label-warning" 
+							ng-show="loginForm.username.$touched && loginForm.username.$invalid">
+						The username is required.
+					</span>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="password" class="col-sm-3 control-label">Password:</label>
 				<div class="col-sm-9">
-					<input id="password" ng-model="password" type="password" class="form-control" />
+					<input name="password" ng-model="password" type="password" class="form-control" required/>
+					<span class="label label-warning" 
+							ng-show="loginForm.password.$touched && loginForm.password.$invalid">
+						The password is required.
+					</span>
 				</div>
 			</div>
 			<div class="form-group">
@@ -30,21 +38,22 @@
 			
 			<div class="form-group">
 				<div class="col-sm-9 col-sm-offset-3">
-					<input type="submit" value="Log In" class="btn btn-primary" ng-click="login()"/>
+					<input type="submit" value="Log In" class="btn btn-primary" ng-click="login()"
+						ng-disabled="loginForm.$invalid"/>
 				</div>
 			</div>
 			
 			<div class="form-group">
 				<div class="col-sm-9 col-sm-offset-3">
-					<a href="#!/register" class=".btn-link" title="Register User">Register</a>
+					<a href="#!/registerUser" class=".btn-link" title="Register User">Register</a>
 				</div>
 			</div>
 			
 		</form>
 	</div>
 	
-	<div class="col-md-6">
+	<!-- <div class="col-md-6">
 		<p class="alert alert-info">Login with default user admin:admin</p>
-	</div>
+	</div> -->
 
 </div>

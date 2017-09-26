@@ -23,7 +23,7 @@
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <!-- Search for Rest Resources and configure them automatically -->
-    <context:component-scan base-package="com.entry.wepapp.rest.resources"/>
+    <context:component-scan base-package="com.entry.wepapp.rest.controller"/>
 
     <!--
         DATABASE SETUP
@@ -36,7 +36,7 @@
         <property name="url" value="${db.url}"/>
     </bean>
     
-    
+    <bean id="AppHelper" class="com.entry.webapp.util.AppHelper"></bean>
 
     <bean id="entityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">

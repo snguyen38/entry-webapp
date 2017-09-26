@@ -4,7 +4,7 @@ import java.io.File;
 
 import com.entry.wepapp.entity.User;
 
-public class AvatarUtils {
+public class AppUtils {
 	
 	public static String getValidAvatarDirectory(String fileContext, String dir) {
 		File file = new File(fileContext + dir);

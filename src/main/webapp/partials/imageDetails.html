@@ -1,60 +1,62 @@
 <div class="page-header">
-	<h3>Image Detail</h3>
+	<h3>Details</h3>
 </div>
 
 <form class="form-horizontal">
-	<div class="col-md-6">
+
+	<div class="col-md-8">
 		<form class="form-horizontal">
 			<div class="form-group">
-				<label for="image" class="col-sm-4 control-label">Image:</label>
-				<div class="col-sm-8">
-					<input id="image" type="file" file-model="image" accept="image/*" class="form-control" />
+				<div class="image-detais">
+				    <img class="image-detais" ng-src="{{post.link}}"  ng-mouseover="imageMouseOver()" ng-mouseleave="imageMouseLeave()">
 				</div>
 			</div>
-
-			<div class="form-group">
-				<label for="imageCategories" class="col-sm-4 control-label">Categories:</label>
-				<div class="col-sm-8">
-					<select  id="imageCategories" ng-model="imageCategories"  class="form-control">
-						<option value="A">A</option>
-						<option value="B">B</option>
-						<option value="C">C</option>
-						<option value="D">D</option>
-					</select>
-				</div>
-			</div>
-			
-			<div class="form-group">
-				<label for="description" class="col-sm-4 control-label">Description:</label>
-				<div class="col-sm-8">
-					<textarea id="description" ng-model="description" rows="5" class="form-control"></textarea>
-				</div>
-			</div>
-			
-			<div class="form-group">
-				<div class="col-sm-8 col-sm-offset-4">
-					<input type="submit" value="Upload" class="btn btn-primary" ng-click="uploadImage()"/>
-				</div>
-			</div>
-			
 		</form>
 	</div>
-
-
-
-
-
-
-	<div class="form-group">
-		<label class="control-label col-sm-2" for="content">Content</label>
-		<div class="col-sm-10">
-			<textarea ng-model="blogPost.content" id="content" class="form-control"
-					  rows="10">{{blogPost.content}}</textarea>
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-sm-10 col-sm-offset-2">
-			<button type="submit" class="btn btn-primary" ng-click="save()"><span class="fa fa-check"></span> Save</button>
-		</div>
-	</div>
+	
+	<div class="col-md-4">
+		<form name="imageDetailForm" class="form-horizontal">
+			<div class="form-group">
+				<b class="row col-md-12">User upload: {{username}}</b>
+			</div>
+			<div class="form-group">
+				<p class="row col-md-12">{{post.date | date}}</p>
+			</div>
+			<div class="form-group">
+				<p class="row col-md-12">{{post.description}}</p>
+			</div>
+			
+			<hr/>
+			<div class="form-group">
+				<i class="fa fa-thumbs-o-up liked" ng-click="updateLikeAndDislike(post.likeNumber + 1, post.dislikeNumber)" aria-hidden="true"></i> <span class="liked">{{post.likeNumber}}</span>
+				<i class="fa fa-thumbs-o-down disliked" ng-click="updateLikeAndDislike(post.likeNumber, post.dislikeNumber + 1)" aria-hidden="true"></i> <span class="disliked">{{post.dislikeNumber}}</span>
+			</div>
+			
+				<div class="form-group">
+				<textarea id="comment" name="comment" enter-event="{{user.name}}" ng-model="comment" rows="2" placeholder="Write a comment" class="col-sm-4 form-control" />
+			
+				<span class="label label-warning" ng-show="commentEmpty">
+						The comment is empty.
+				</span>
+			</div>
+			
+			<hr/>
+			
+			<!-- comment zone-->
+			<div>
+				<div ng-repeat="comment in comments">
+					<div class="row comment">
+						<div class="col-sm-4">
+							<b class="row comment">{{comment.username}}</b>
+							<p class="row comment">{{comment.date | date}}</p>
+						</div>
+						
+						<div class="col-sm-8">
+							<p class="row comment">{{comment.content}}</p>
+						</div>
+					</div>
+					<hr />
+				</div>
+			</div>
+			<!-- end comment zone-->
 </form>

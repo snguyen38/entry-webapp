@@ -1,4 +1,4 @@
-package com.entry.wepapp.rest.resources;
+package com.entry.wepapp.rest.controller;
 
 import java.io.File;
 import java.io.InputStream;
@@ -32,12 +32,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
-import com.entry.webapp.util.AvatarUtils;
+import com.entry.webapp.util.AppHelper;
+import com.entry.webapp.util.AppUtils;
 import com.entry.wepapp.entity.AccessToken;
 import com.entry.wepapp.entity.Role;
 import com.entry.wepapp.entity.User;
@@ -51,6 +51,9 @@ public class UserController
 	
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private AppHelper appHelper;
     
     @Context
 	private ServletContext context;
@@ -78,7 +81,7 @@ public class UserController
         }
         UserDetails userDetails = (UserDetails) principal;
         User user = this.userService.findUserByNickName(userDetails.getUsername());
-        String avatarDir = AvatarUtils.getValidAvatarDirectory(context.getRealPath(""), user.getAvatar());
+        String avatarDir = AppUtils.getValidAvatarDirectory(context.getRealPath(""), user.getAvatar());
         return new UserTransfer(user.getId(), userDetails.getUsername(), avatarDir, this.createRoleMap(userDetails));
     }
     
@@ -140,11 +143,11 @@ public class UserController
 		}
 	}
     
-	@POST
+    @POST
 	@Path("/register")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, String> registerUser(@FormDataParam("file") InputStream uploadedInputStream,
+	public Response registerUser(@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail, 
 			@FormDataParam("firstName") String firstName,
 			@FormDataParam("lastName") String lastName,
@@ -152,17 +155,12 @@ public class UserController
 			@FormDataParam("email") String email,
 			@FormDataParam("phone") String phone,
 			@FormDataParam("country") String country,
-			@FormDataParam("nickName") String nickName) {
-		Map<String, String> res = new HashMap<>();
+			@FormDataParam("nickName") String nickName) throws Exception {
 		try {
-			User userTemp4Email = this.userService.findUserByEmail(email);
-			if (!ObjectUtils.isEmpty(userTemp4Email)) {
-				res.put("status", "false"); 
-				res.put("msg", "Email is existed"); 
-				return res;
+			Map<String, Boolean> res = appHelper.checkUserExist(email, nickName);
+			if (!ObjectUtils.isEmpty(res) /*&& !res.get("status")*/) {
+				return Response.status(400).entity(res).build();
 			}
-			
-			this.userService.findUserByNickName(nickName);
 			
 			String fileContext = context.getRealPath("");   
 			String filePath = "images-storage\\" + nickName;
@@ -177,20 +175,14 @@ public class UserController
 	        user.addRole(Role.ADMIN);
 	        System.out.println("real path: " + filePath);
 			if (!ObjectUtils.isEmpty(this.userService.saveUser(user))) {
-				res.put("status", "true"); 
-				res.put("msg", "User registered successfully"); 
+				res.put("status", true); 
 			}
 				
-			return res;
-		} catch (UsernameNotFoundException e) {
-			res.put("status", "false"); 
-			res.put("msg", "Nick name is existed");
-			return res;
-		
+			return Response.status(200).entity(res).build();
 		} catch (Exception e) {
-		LOGGER.error(e.getMessage(), e);
-		return res;
-	}
+			LOGGER.error(e.getMessage(), e);
+			throw new Exception("c");
+		}
 	}
 	
 	
@@ -198,7 +190,7 @@ public class UserController
 	@Path("/updateUser/{id}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public User updateUser(@PathParam("id") Long id,
+	public Response updateUser(@PathParam("id") Long id,
 			@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail, 
 			@FormDataParam("firstName") String firstName,
@@ -208,6 +200,13 @@ public class UserController
 			@FormDataParam("country") String country,
 			@FormDataParam("nickName") String nickName) {
 		try {
+			if (!this.userService.findUserById(id).getNickName().equals(nickName)) {
+				Map<String, Boolean> res = appHelper.checkUserExist("", nickName);
+				if (!ObjectUtils.isEmpty(res)) {
+					return Response.status(400).entity(res).build();
+				}
+			}
+			
 			String fileContext = context.getRealPath("");
 			String filePath = "";
 			if (!ObjectUtils.isEmpty(fileDetail.getFileName())) {
@@ -221,7 +220,13 @@ public class UserController
 					userService.findUserById(id).getEmail(), phone, country, nickName, filePath);
 	        user.addRole(Role.ADMIN);
 	        user.setId(id);
-			return this.userService.saveUser(user);
+	        
+	        User userResponse = this.userService.saveUser(user);
+	        if (!ObjectUtils.isEmpty(userResponse)) {
+	        	AppUtils.getValidAvatarDirectory(context.getRealPath(""), userResponse.getAvatar());
+	        	return Response.status(200).entity(AppUtils.getValidAvatarDirectory(context.getRealPath(""), userResponse)).build();
+	        }
+	        return Response.status(500).entity(null).build();
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 			return null;
