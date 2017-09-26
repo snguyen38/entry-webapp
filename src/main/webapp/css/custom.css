@@ -32,6 +32,16 @@ img.avatar {
     object-fit: cover;
 }
 
+img.avatarComment {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+}
+
+.commentRow.commentCol2 {
+    margin-left: 10px;
+}
+
 img.post {
     width: 380px;
     height: 380px;

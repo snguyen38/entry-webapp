@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 @SuppressWarnings("serial")
 @javax.persistence.Entity
@@ -25,6 +26,9 @@ public class Comment implements Entity
     
     @Column(nullable = false)
     private Date date;
+    
+    @Transient
+    private String avatar;
 
     
     protected Comment()
@@ -76,6 +80,14 @@ public class Comment implements Entity
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 
 }

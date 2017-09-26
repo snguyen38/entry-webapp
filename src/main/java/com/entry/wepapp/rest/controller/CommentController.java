@@ -17,8 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
+import com.entry.webapp.util.AppUtils;
 import com.entry.wepapp.dao.post.CommentDao;
 import com.entry.wepapp.entity.Comment;
+import com.entry.wepapp.service.UserService;
 
 @Component
 @Path("/comments")
@@ -28,6 +30,9 @@ public class CommentController
 
     @Autowired
     private CommentDao commentDao;
+    
+    @Autowired
+    private UserService userService;
     
     @Context
 	private ServletContext context;
@@ -53,9 +58,16 @@ public class CommentController
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
     public List<Comment> findByPost(@FormDataParam("postId") Long postId) {
-        List<Comment> allEntries = this.commentDao.findByPost(postId);
+        List<Comment> comments = this.commentDao.findByPost(postId);
+     
+        // get avatar for comments
+        for (Comment comment:comments) {
+        	String avatar = AppUtils.getValidAvatarDirectory(context.getRealPath(""),
+        			this.userService.findUserByNickName(comment.getUsername()).getAvatar());
+        	comment.setAvatar(avatar);
+        }
 
-        return allEntries;
+        return comments;
     }
 
 }

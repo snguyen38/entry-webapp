@@ -46,12 +46,16 @@
 			<div class="form-group">
 				<div ng-repeat="comment in comments">
 					<div class="row comment">
-						<div class="col-sm-4 commentRow">
+						<div class="col-sm-1 commentRow">
+							<img class="avatarComment img-circle" ng-src="{{comment.avatar}}">
+						</div>
+					
+						<div class="col-sm-4 commentRow commentCol2">
 							<b class="row comment">{{comment.username}}</b>
 							<p class="row comment">{{comment.date | date}}</p>
 						</div>
 						
-						<div class="col-sm-8">
+						<div class="col-sm-6">
 							<p class="row comment">{{comment.content}}</p>
 						</div>
 					</div>

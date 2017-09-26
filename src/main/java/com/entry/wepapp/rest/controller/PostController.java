@@ -31,6 +31,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
+import com.entry.webapp.util.AppUtils;
 import com.entry.wepapp.dao.post.CategoryDao;
 import com.entry.wepapp.dao.post.CommentDao;
 import com.entry.wepapp.dao.post.PostDao;
@@ -118,7 +119,16 @@ public class PostController
         res.put("post", post);
         
         List<Comment> comments = this.commentDao.findByPost(id);
+    
+        // get avatar for comments
+        for (Comment comment:comments) {
+        	String avatar = AppUtils.getValidAvatarDirectory(context.getRealPath(""),
+        			this.userService.findUserByNickName(comment.getUsername()).getAvatar());
+        	comment.setAvatar(avatar);
+        }
+        
         res.put("comments", comments);
+       
         User user = this.userService.findUserById(post.getId());
         if (!ObjectUtils.isEmpty(user)) {
         	res.put("username", user.getNickName());
@@ -140,6 +150,14 @@ public class PostController
             	Map map = new HashMap();
             	map.put("post", post);
                 List<Comment> comments = this.commentDao.findByPost(post.getId());
+                
+             // get avatar for comments
+                for (Comment comment:comments) {
+                	String avatar = AppUtils.getValidAvatarDirectory(context.getRealPath(""),
+                			this.userService.findUserByNickName(comment.getUsername()).getAvatar());
+                	comment.setAvatar(avatar);
+                }
+                
                 map.put("comments", comments);
                 
                 response.add(map);

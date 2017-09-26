@@ -166,12 +166,12 @@ public class UserController
 			String filePath = "images-storage\\" + nickName;
 			if (!ObjectUtils.isEmpty(fileDetail.getFileName())) {
 				filePath = filePath + "\\" + fileDetail.getFileName();
-				File targetFile = new File(fileContext + filePath);
+				File targetFile = new File(fileContext.toLowerCase() + filePath.toLowerCase());
 			    FileUtils.copyInputStreamToFile(uploadedInputStream, targetFile);
 			}
 			
 			User user = new User(firstName, lastName, this.passwordEncoder.encode(password),
-	        		email, phone, country, nickName, filePath);
+	        		email, phone, country, nickName, filePath.toLowerCase());
 	        user.addRole(Role.ADMIN);
 	        System.out.println("real path: " + filePath);
 			if (!ObjectUtils.isEmpty(this.userService.saveUser(user))) {
@@ -212,12 +212,12 @@ public class UserController
 			if (!ObjectUtils.isEmpty(fileDetail.getFileName())) {
 				filePath = "images-storage\\" + nickName;
 				filePath = filePath + "\\" + fileDetail.getFileName();
-				File targetFile = new File(fileContext + filePath);
+				File targetFile = new File(fileContext.toLowerCase() + filePath.toLowerCase());
 			    FileUtils.copyInputStreamToFile(uploadedInputStream, targetFile);
 			}
 
 		    User user = new User(firstName, lastName, this.passwordEncoder.encode(password),
-					userService.findUserById(id).getEmail(), phone, country, nickName, filePath);
+					userService.findUserById(id).getEmail(), phone, country, nickName, filePath.toLowerCase());
 	        user.addRole(Role.ADMIN);
 	        user.setId(id);
 	        
