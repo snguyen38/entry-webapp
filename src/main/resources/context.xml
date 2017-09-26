@@ -23,7 +23,7 @@
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <!-- Search for Rest Resources and configure them automatically -->
-    <context:component-scan base-package="com.entry.wepapp.rest.controller"/>
+    <context:component-scan base-package="com.entry.webapp.rest.controller"/>
 
     <!--
         DATABASE SETUP
@@ -54,25 +54,25 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
-    <bean id="categoryDao" class="com.entry.wepapp.dao.post.JpaCategoryDao"></bean>
+    <bean id="categoryDao" class="com.entry.webapp.dao.post.JpaCategoryDao"></bean>
     
-    <bean id="postDao" class="com.entry.wepapp.dao.post.JpaPostDao"></bean>
+    <bean id="postDao" class="com.entry.webapp.dao.post.JpaPostDao"></bean>
     
-    <bean id="commentDao" class="com.entry.wepapp.dao.post.JpaCommentDao"></bean>
+    <bean id="commentDao" class="com.entry.webapp.dao.post.JpaCommentDao"></bean>
 
-    <bean id="userDao" class="com.entry.wepapp.dao.user.JpaUserDao"></bean>
+    <bean id="userDao" class="com.entry.webapp.dao.user.JpaUserDao"></bean>
 
-    <bean id="accessTokenDao" class="com.entry.wepapp.dao.accesstoken.JpaAccessTokenDao"></bean>
+    <bean id="accessTokenDao" class="com.entry.webapp.dao.accesstoken.JpaAccessTokenDao"></bean>
     
-    <bean id="countryDao" class="com.entry.wepapp.dao.post.JpaCountryDao"></bean>
+    <bean id="countryDao" class="com.entry.webapp.dao.post.JpaCountryDao"></bean>
 
-    <bean id="userService" class="com.entry.wepapp.service.DaoUserService">
+    <bean id="userService" class="com.entry.webapp.service.DaoUserService">
         <constructor-arg ref="userDao"/>
         <constructor-arg ref="accessTokenDao"/>
     </bean>
     
     <bean id="dataBaseInitializer"
-          class="com.entry.wepapp.dao.DataBaseInitializer"
+          class="com.entry.webapp.dao.DataBaseInitializer"
           init-method="initDataBase">
         <constructor-arg ref="passwordEncoder"/>
         <constructor-arg ref="userDao"/>
@@ -125,10 +125,10 @@
     </security:http>
 
     <bean id="unauthorizedEntryPoint"
-          class="com.entry.wepapp.rest.UnauthorizedEntryPoint"/>
+          class="com.entry.webapp.rest.UnauthorizedEntryPoint"/>
 
     <bean id="authenticationTokenProcessingFilter"
-          class="com.entry.wepapp.rest.AuthenticationTokenProcessingFilter">
+          class="com.entry.webapp.rest.AuthenticationTokenProcessingFilter">
         <constructor-arg ref="userService"/>
     </bean>
 </beans>

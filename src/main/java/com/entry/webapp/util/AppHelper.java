@@ -8,8 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import com.entry.wepapp.entity.User;
-import com.entry.wepapp.service.UserService;
+import com.entry.webapp.entity.User;
+import com.entry.webapp.service.UserService;
 
 public class AppHelper {
 	

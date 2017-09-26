@@ -2,7 +2,7 @@ package com.entry.webapp.util;
 
 import java.io.File;
 
-import com.entry.wepapp.entity.User;
+import com.entry.webapp.entity.User;
 
 public class AppUtils {
 	
