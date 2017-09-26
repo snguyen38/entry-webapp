@@ -17,13 +17,13 @@
 	<div class="col-md-4">
 		<form name="imageDetailForm" class="form-horizontal">
 			<div class="form-group uploadBy">
-				<p class="row col-md-12">User upload: <b>{{username}}</b></p>
+				<p class="row col-md-12 userUpload">User upload: <b>{{username}}</b></p>
 			</div>
 			<div class="form-group">
-				<p class="row col-md-12">{{post.date | date}}</p>
+				<p class="row col-md-12 datetimeLabel">{{post.date | date}}</p>
 			</div>
 			<div class="form-group">
-				<p class="row col-md-12">{{post.description}}</p>
+				<p class="row col-md-12 wordBreak">{{post.description}}</p>
 			</div>
 			
 			<hr/>
@@ -55,8 +55,8 @@
 							<p class="row comment">{{comment.date | date}}</p>
 						</div>
 						
-						<div class="col-sm-6">
-							<p class="row comment">{{comment.content}}</p>
+						<div class="col-sm-6 comment">
+							<p class="row comment wordBreak">{{comment.content}}</p>
 						</div>
 					</div>
 					<hr />

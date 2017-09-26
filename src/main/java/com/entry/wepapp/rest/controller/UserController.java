@@ -139,7 +139,7 @@ public class UserController
 		if (!file.isDirectory() && file.exists()) {
 			return filePath;
 		} else {
-			return "images/if_icon-person.png";
+			return "images/avatar/default.png";
 		}
 	}
     

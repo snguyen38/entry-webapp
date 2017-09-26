@@ -1,11 +1,11 @@
+
+
 <div class="pull-right">
-	<a href="#!/uploadImage" class="btn btn-primary" title="Upload"><span class="fa fa-upload"></span></a>
+	<a href="#!/uploadImage" class="btn btn-primary btnUpload" title="Upload"><span class="fa fa-upload"></span></a>
 </div>
-
 <div class="pull-right delete">
-	<a href="" ng-click="deletePosts()" class="btn btn-danger" title="Delete"><span class="fa fa-trash-o"></span></a>
+	<a href="" ng-click="deletePosts()" class="btn btn-danger btnUpload" title="Delete"><span class="fa fa-trash-o"></span></a>
 </div>
-
 <div class="page-header">
 	<h3>User Repository</h3>
 </div>
@@ -24,24 +24,24 @@
 		
 		<div class="col-md-2">
 			<h4 class="row">{{post.post.date | date}}</h4>
-			<p class="row">{{post.post.description}}</p>
+			<p class="row wordBreak desciption">{{post.post.description}}</p>
 		</div>
 		
 		<!-- comment zone-->
 		<div class="col-md-7 comments-form">
 			<div ng-repeat="comment in post.comments">
-				<div class="row comment">
-					<div class="col-sm-1 commentRow">
+				<div class="row">
+					<div class="col-md-1 commentRowAvatar">
 							<img class="avatarComment img-circle" ng-src="{{comment.avatar}}">
 						</div>
 					
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<b class="row comment">{{comment.username}}</b>
 						<p class="row comment">{{comment.date | date}}</p>
 					</div>
 					
-					<div class="col-md-7">
-						<p class="row comment">{{comment.content}}</p>
+					<div class="col-md-8">
+						<p class="row comment wordBreak">{{comment.content}}</p>
 					</div>
 				</div>
 				<hr />

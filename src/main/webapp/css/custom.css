@@ -77,7 +77,7 @@ img.image-repo {
     object-fit: cover;
 }
 .comments-form {
-	max-height: 200px;
+	max-height: 300px;
 	min-height: 100%;
 	overflow-y: auto;
 }
@@ -191,4 +191,34 @@ div.image-row {
 
 .commentRow {
     padding-left: 0px;
+}
+
+a.btn.btnUpload {
+	padding: 2px 10px;
+	font-size: 21px;
+}
+
+p.wordBreak {
+    word-break: break-word;
+}
+
+div.comment {
+    margin: 0px;
+    padding: 0px;
+}
+
+div.commentRowAvatar {
+	padding-left: 15px
+}
+
+.userUpload {
+    margin-bottom: 0px;
+}
+
+.datetimeLabel {
+    margin-bottom: -5px;
+}
+
+p.row.wordBreak.desciption {
+    padding-right: 10px;
 }

@@ -14,25 +14,25 @@ public class Post implements Entity
     @GeneratedValue
     private Long id;
 
-    @Column
+    @Column(length = 1000, nullable = false)
     private String description;
     
-    @Column
+    @Column(nullable = false)
     private Long likeNumber;
     
-    @Column
+    @Column(nullable = false)
     private Long dislikeNumber;
     
-    @Column
+    @Column(length = 40, nullable = false)
     private String username;
     
-    @Column
+    @Column(length = 40, nullable = false)
 	private String category;
     
-    @Column
+    @Column(nullable = true)
     private String link;
     
-    @Column
+    @Column(nullable = false)
     private Date date;
     
     protected Post()

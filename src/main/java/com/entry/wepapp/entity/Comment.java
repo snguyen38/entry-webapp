@@ -15,13 +15,13 @@ public class Comment implements Entity
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @Column(length = 40, nullable = false)
     private String username;
     
-    @Column(nullable = false)
+    @Column(length = 10, nullable = false)
     private Long postId;
     
-    @Column(nullable = false)
+    @Column(length = 1000, nullable = false)
     private String content;
     
     @Column(nullable = false)

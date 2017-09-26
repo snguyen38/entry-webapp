@@ -12,7 +12,7 @@ public class Category implements Entity
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @Column(length = 40, nullable = false)
     private String categoryName;
 
     protected Category()

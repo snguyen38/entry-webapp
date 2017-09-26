@@ -165,7 +165,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'app.services'])
     };
 }]);
 
-function MainController($rootScope, $scope, $location, PostService) {
+function MainController($rootScope, $scope, $http, $location, PostService) {
 	if ($rootScope.accessToken == undefined) {
 		$location.path("/login");
 	} else {
@@ -180,6 +180,18 @@ function MainController($rootScope, $scope, $location, PostService) {
 			var likeEle = angular.element( event.target.nextElementSibling );
 			likeEle.addClass('hidden');
 		};
+		
+		 var fd = new FormData();
+		$http.post(window.location.pathname + "rest/posts/getCategories", fd, {
+			transformRequest: angular.identity,
+			headers: {'Content-Type': 'application/json', 'X-Access-Token': $rootScope.accessToken}
+		})
+		.then(function(response) {
+			var res = response.data;
+			if (res) {
+				$scope.categories = res;
+			}
+		});
     }
 }
 

@@ -11,7 +11,7 @@ public class AppUtils {
 		if (!file.isDirectory() && file.exists()) {
 			return dir;
 		} else {
-			return "images/if_icon-person.png";
+			return "images/avatar/default.png";
 		}
 	}
 	

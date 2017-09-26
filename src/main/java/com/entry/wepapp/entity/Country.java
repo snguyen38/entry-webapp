@@ -12,7 +12,7 @@ public class Country implements Entity
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @Column(length = 40, nullable = false)
     private String countryName;
 
     protected Country()

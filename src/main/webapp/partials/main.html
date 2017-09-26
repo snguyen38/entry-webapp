@@ -2,13 +2,17 @@
 	<div class="form-group">
 		<label for="imageCategories" class="col-sm-1 control-label">Categories:</label>
 		<div class="col-sm-3">
-			<select  id="imageCategories" ng-model="imageCategories"  class="form-control">
+			<!-- <select  id="imageCategories" ng-model="imageCategories"  class="form-control">
 				<option value="">All</option>
 				<option value="People">People</option>
 				<option value="Building">Building</option>
 				<option value="Landscape">Landscape</option>
 				<option value="Nature">Nature</option>
 				<option value="Animal">Animal</option>
+			</select> -->
+			<select id="imageCategories" name="imageCategories" ng-model="imageCategory" required
+				class="form-control" ng-options="category.categoryName for category in categories">
+					<option value="">All</option>
 			</select>
 		</div>
 		
@@ -27,7 +31,6 @@
 				<option value="true">DESC</option>
 			</select>
 		</div>
-		
 	</div>
 </div>
 
@@ -39,12 +42,12 @@
 		</div>
 		
 		<div class="col-sm-4">
-			<input id="limitTo" type="range" ng-model="limitTo" min="0" max="30" value="1" step="1">
+			<input id="limitTo" type="range" ng-model="limitTo" min="0" max="60" value="1" step="1">
 		</div>
 		<label for="limitTo" class="col-sm-2">Limit to: {{limitTo}}</label>
 
 		<div class="pull-right">
-			<a href="#!/uploadImage" class="btn btn-primary" ng-show="hasRole('ROLE_ADMIN')" title="Upload">
+			<a href="#!/uploadImage" class="btn btn-primary btnUpload" ng-show="hasRole('ROLE_ADMIN')" title="Upload">
 				<span class="fa fa-upload"></span>
 			</a>
 		</div>
@@ -53,7 +56,7 @@
 
 <hr/>
 
-<div ng-repeat="post in posts  | filter :{category:imageCategories, username:username} | orderBy:orderBy:sort | limitTo: limitTo">
+<div ng-repeat="post in posts  | filter :{category:imageCategory.categoryName, username:username} | orderBy:orderBy:sort | limitTo: limitTo">
 	<a href="#!/imageDetails/{{post.id}}">
 		<div class="image" ng-mouseover="imageMouseOver($event)" ng-mouseleave="imageMouseLeave()">
 			<img class="post" ng-src="{{post.link}}"  >
