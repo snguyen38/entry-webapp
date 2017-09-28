@@ -74,9 +74,9 @@ public class PostController
 			@FormDataParam("description") String description) {
 		try {
 			String fileContext = context.getRealPath("");
-			String filePath = "images-storage\\posts\\" + category;
+			String filePath = "images-storage" + File.separator + "posts" + File.separator + category;
 			if (!ObjectUtils.isEmpty(fileDetail.getFileName())) {
-				filePath = filePath + "\\" + fileDetail.getFileName();
+				filePath = filePath + File.separator + fileDetail.getFileName();
 				File targetFile = new File(fileContext + filePath);
 			    FileUtils.copyInputStreamToFile(uploadedInputStream, targetFile);
 			    if (targetFile.length() > 5242880) {
